@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29424.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01.Distance Calculator", "01.Distance Calculator\01.Distance Calculator.csproj", "{EDA8F5A1-A97F-4C25-8AF0-4F3EC57D3E96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02.Number Array", "02.Number Array\02.Number Array.csproj", "{AD20539B-78C9-4C63-BE7B-8B56889CEA2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03.Contact List", "03.Contact List\03.Contact List.csproj", "{8BEC1D01-AA69-470C-AB98-A7B83AC8B606}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDA8F5A1-A97F-4C25-8AF0-4F3EC57D3E96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDA8F5A1-A97F-4C25-8AF0-4F3EC57D3E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDA8F5A1-A97F-4C25-8AF0-4F3EC57D3E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDA8F5A1-A97F-4C25-8AF0-4F3EC57D3E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD20539B-78C9-4C63-BE7B-8B56889CEA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD20539B-78C9-4C63-BE7B-8B56889CEA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD20539B-78C9-4C63-BE7B-8B56889CEA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD20539B-78C9-4C63-BE7B-8B56889CEA2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BEC1D01-AA69-470C-AB98-A7B83AC8B606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BEC1D01-AA69-470C-AB98-A7B83AC8B606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BEC1D01-AA69-470C-AB98-A7B83AC8B606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BEC1D01-AA69-470C-AB98-A7B83AC8B606}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {87A6B399-0D06-4035-B68A-DCC3E8EE17C4}
+	EndGlobalSection
+EndGlobal

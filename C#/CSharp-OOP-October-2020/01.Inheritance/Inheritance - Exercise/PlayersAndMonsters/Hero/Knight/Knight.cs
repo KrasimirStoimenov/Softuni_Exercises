@@ -1,0 +1,10 @@
+﻿namespace PlayersAndMonsters.Hero.Knight
+{
+    public class Knight : Hero
+    {
+        public Knight(string username, int level) 
+            : base(username, level)
+        {
+        }
+    }
+}
