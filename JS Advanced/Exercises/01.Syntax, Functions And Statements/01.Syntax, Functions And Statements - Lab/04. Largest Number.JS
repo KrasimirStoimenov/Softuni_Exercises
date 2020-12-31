@@ -1,7 +1,6 @@
 function findLargestNumber(firstNumber, secondNumber, thirdNumber) {
 
-    let biggerFromFirstTwo = Math.max(firstNumber, secondNumber);
-    let biggestNumber = Math.max(biggerFromFirstTwo, thirdNumber);
+    let biggestNumber = Math.max(firstNumber,secondNumber,thirdNumber)
 
     console.log(`The largest number is ${biggestNumber}.`);
 }
