@@ -1,5 +1,0 @@
-ALTER TABLE dogs
-	ADD Color VARCHAR(20);
-
-ALTER TABLE dogs
-	DROP COLUMN color;
