@@ -5,7 +5,7 @@ CREATE TABLE Users
 	[Password] VARCHAR(26) NOT NULL,
 	ProfilePicture VARBINARY(MAX),
 	LastLoginTime DATETIME2,
-	IsDeleted VARCHAR(5)
+	IsDeleted BIT
 )
 
 INSERT INTO Users (Username,[Password])
