@@ -1,0 +1,12 @@
+----- Problem 12.Set Unique Field
+ALTER TABLE Users
+DROP CONSTRAINT PK_Id_Username
+
+ALTER TABLE Users
+ADD CONSTRAINT PK_Id PRIMARY KEY (Id)
+
+ALTER TABLE Users
+ADD CONSTRAINT uq_Username UNIQUE (Username) 
+
+ALTER TABLE Users
+ADD CHECK (LEN(Username)>3)
