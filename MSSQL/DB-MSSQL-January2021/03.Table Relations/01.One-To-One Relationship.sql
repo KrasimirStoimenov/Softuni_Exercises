@@ -7,7 +7,7 @@ USE TableRelationsExercise
 CREATE TABLE Passports
 (
 	PassportID INT PRIMARY KEY,
-	PassportNumber VARCHAR(30) NOT NULL
+	PassportNumber CHAR(8) NOT NULL
 )
 
 INSERT INTO Passports
@@ -21,7 +21,7 @@ CREATE TABLE Persons
 	PersonID INT PRIMARY KEY IDENTITY,
 	FirstName VARCHAR(50) NOT NULL,
 	Salary DECIMAL (18,2) NOT NULL,
-	PassportID INT FOREIGN KEY REFERENCES Passports(PassportID)
+	PassportID INT UNIQUE FOREIGN KEY REFERENCES Passports(PassportID)
 )
 
 
