@@ -8,9 +8,9 @@ BEGIN
 						FROM Planets p 
 						JOIN Spaceports sp ON sp.PlanetId = p.Id
 						JOIN Journeys j ON j.DestinationSpaceportId = sp.Id
-						JOIN TravelCards tc ON tc.JourneyId = j.Id					
-					  GROUP BY p.[Name]
-						HAVING p.[Name] = @planetName)		
+						JOIN TravelCards tc ON tc.JourneyId = j.Id	
+						JOIN Colonists c ON tc.ColonistId = c.Id
+						WHERE p.[Name] = @planetName)		
 END
 
 GO
