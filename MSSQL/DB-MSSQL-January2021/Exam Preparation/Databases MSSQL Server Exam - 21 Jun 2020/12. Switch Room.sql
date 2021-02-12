@@ -4,7 +4,7 @@ CREATE PROCEDURE usp_SwitchRoom(@TripId INT, @TargetRoomId INT)
 AS
 	DECLARE @TargetRoomHotelId INT= (SELECT h.Id FROM Hotels h JOIN Rooms r ON r.HotelId = h.Id WHERE r.Id = @TargetRoomId);
 	DECLARE @BedsInTheTargetRoom INT =(SELECT Beds FROM Rooms WHERE Id = @TargetRoomId);
-	DECLARE @PeopleInTheTrip INT = (SELECT COUNT(*) AS [Count] FROM AccountsTrips WHERE TripId = @TripId);
+	DECLARE @PeopleForTheTrip INT = (SELECT COUNT(*) AS [Count] FROM AccountsTrips WHERE TripId = @TripId);
 	DECLARE @TripHotelId INT = (SELECT h.Id FROM Trips t
 									JOIN Rooms r ON t.RoomId = r.Id
 									JOIN Hotels h ON r.HotelId = h.Id
