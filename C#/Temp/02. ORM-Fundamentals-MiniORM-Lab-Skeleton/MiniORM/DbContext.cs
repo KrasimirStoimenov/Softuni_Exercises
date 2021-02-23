@@ -123,7 +123,42 @@ namespace MiniORM
 
         private void MapAllRelations()
         {
-            throw new NotImplementedException();
+            foreach (var dbSetProperty in dbSetProperties)
+            {
+                var dbSetType = dbSetProperty.Key;
+
+                var mapRelationsGeneric = typeof(DbContext)
+                    .GetMethod("MapRelations", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .MakeGenericMethod(dbSetType);
+
+                var dbSet = dbSetProperty.Value.GetValue(this);
+
+                mapRelationsGeneric.Invoke(this, new[] { dbSet });
+            }
+        }
+
+        private void MapRelations<TEntity>(DbSet<TEntity> dbSet)
+            where TEntity : class, new()
+        {
+            var entityType = typeof(TEntity);
+
+            MapNavigationProperties(dbSet);
+
+            var collections = entityType
+                .GetProperties()
+                .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
+                .ToArray();
+
+            foreach (var collection in collections)
+            {
+                var collectionType = collection.PropertyType.GenericTypeArguments.First();
+
+                var mapCollectionMethod = typeof(DbContext)
+                    .GetMethod("MapCollection", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .MakeGenericMethod(entityType, collectionType);
+
+                mapCollectionMethod.Invoke(this, new object[] { dbSet, collection });
+            }
         }
 
         private void InitializeDbSets()
@@ -137,7 +172,7 @@ namespace MiniORM
                     .GetMethod("PopulateDbSet", BindingFlags.Instance | BindingFlags.NonPublic)
                     .MakeGenericMethod(dbSetType);
 
-                populateDbSetGeneric.Invoke(this,new object[] { })
+                populateDbSetGeneric.Invoke(this, new object[] { dbSetProperty });
             }
         }
 
@@ -145,5 +180,15 @@ namespace MiniORM
         {
             throw new NotImplementedException();
         }
+
+        private void PopulateDbSet<TEntity>(PropertyInfo dbSet)
+            where TEntity : class, new()
+        {
+            var entities = LoadTableEntities<TEntity>();
+
+            var dbSetInstance = new DbSet<TEntity>(entities);
+            ReflectionHelper.ReplaceBackingField(this, dbSet.Name, dbSetInstance);
+        }
+
     }
 }
