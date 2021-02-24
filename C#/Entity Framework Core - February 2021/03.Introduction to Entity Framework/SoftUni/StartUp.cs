@@ -35,6 +35,34 @@ namespace SoftUni
             //7.Employees and Projects
             Console.WriteLine(new string('-', 20));
             Console.WriteLine(GetEmployeesInPeriod(db));
+
+            //8.Addresses by Town
+            Console.WriteLine(new string('-', 20));
+            Console.WriteLine(GetAddressesByTown(db));
+        }
+        public static string GetAddressesByTown(SoftUniContext context)
+        {
+            var addresses = context.Addresses
+                .Select(x => new
+                {
+                    TownName = x.Town.Name,
+                    AddressText = x.AddressText,
+                    EmployeesCount = x.Employees.Count,
+                })
+                .OrderByDescending(x => x.EmployeesCount)
+                .ThenBy(x => x.TownName)
+                .ThenBy(x => x.AddressText)
+                .ToList();
+
+            var sb = new StringBuilder();
+
+            foreach (var address in addresses)
+            {
+                sb.AppendLine($"{address.AddressText}, {address.TownName} - {address.EmployeesCount} employees");
+            }
+
+            return sb.ToString().TrimEnd();
+
         }
         public static string GetEmployeesInPeriod(SoftUniContext context)
         {
