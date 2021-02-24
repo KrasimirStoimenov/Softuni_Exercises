@@ -15,9 +15,62 @@ namespace SoftUni
             var db = new SoftUniContext();
 
             //3.Employees Full Information
-                Console.WriteLine(GetEmployeesFullInformation(db));
+            Console.WriteLine(new string('-',20));
+            Console.WriteLine(GetEmployeesFullInformation(db));
 
             //4.Employees with Salary Over 50 000
+            Console.WriteLine(new string('-',20));
+            Console.WriteLine(GetEmployeesWithSalaryOver50000(db));
+
+            //5.Employees from Research and Development
+            Console.WriteLine(new string('-',20));
+            Console.WriteLine(GetEmployeesFromResearchAndDevelopment(db));
+
+
+        }
+        public static string GetEmployeesFromResearchAndDevelopment(SoftUniContext context)
+        {
+            var employees = context.Employees
+                .Where(x => x.Department.Name == "Research and Development")
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    DepartmentName = e.Department.Name,
+                    e.Salary,
+                })
+                .OrderBy(x => x.Salary)
+                .ThenByDescending(x => x.FirstName)
+                .ToList();
+
+            var sb = new StringBuilder();
+
+            foreach (var emp in employees)
+            {
+                sb.AppendLine($"{emp.FirstName} {emp.LastName} from {emp.DepartmentName} - ${emp.Salary:F2}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+        public static string GetEmployeesWithSalaryOver50000(SoftUniContext context)
+        {
+            var emplyees = context.Employees
+                .Where(e => e.Salary > 50000)
+                .Select(x => new
+                {
+                    x.FirstName,
+                    x.Salary,
+                })
+                .OrderBy(x => x.FirstName)
+                .ToList();
+
+            var sb = new StringBuilder();
+            foreach (var employee in emplyees)
+            {
+                sb.AppendLine($"{employee.FirstName} - {employee.Salary:F2}");
+            }
+
+            return sb.ToString().TrimEnd();
         }
         public static string GetEmployeesFullInformation(SoftUniContext context)
         {

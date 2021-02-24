@@ -351,3 +351,4 @@ MigrationBackup/
 *.ini
 *.csproj
 *.sln
+*.zip
