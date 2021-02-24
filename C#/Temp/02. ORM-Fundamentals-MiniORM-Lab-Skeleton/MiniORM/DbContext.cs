@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -116,9 +118,14 @@ namespace MiniORM
             }
         }
 
-        private bool IsObjectValid(object x)
+        private static bool IsObjectValid(object x)
         {
-            throw new NotImplementedException();
+            var validationContext = new ValidationContext(x);
+            var validationErrors = new List<ValidationResult>();
+
+            var validationResult = Validator.TryValidateObject(x, validationContext, validationErrors, true);
+
+            return validationResult;
         }
 
         private void MapAllRelations()
@@ -161,6 +168,73 @@ namespace MiniORM
             }
         }
 
+
+        private void MapCollection<TDbSet, TCollection>(DbSet<TDbSet> dbSet, PropertyInfo collectionProperty)
+            where TDbSet : class, new() where TCollection : class, new()
+        {
+            var entityType = typeof(TDbSet);
+            var collectionType = typeof(TCollection);
+
+            var primaryKeys = collectionType.GetProperties()
+                .Where(x => x.HasAttribute<KeyAttribute>())
+                .ToArray();
+
+            var primaryKey = primaryKeys.First();
+            var foreignKey = entityType.GetProperties()
+                .First(x => x.HasAttribute<KeyAttribute>());
+
+            var isManyToMany = primaryKeys.Length >= 2;
+
+            if (isManyToMany)
+            {
+                primaryKey = collectionType.GetProperties()
+                    .First(x => collectionType.GetProperty(x.GetCustomAttribute<ForeignKeyAttribute>().Name).PropertyType == entityType);
+            }
+
+            var navigationDbSet = (DbSet<TCollection>)this.dbSetProperties[collectionType].GetValue(this);
+
+            foreach (var entity in dbSet)
+            {
+                var primaryKeyValue = foreignKey.GetValue(entity);
+
+                var navigationEntities = navigationDbSet
+                    .Where(ne => primaryKey.GetValue(ne).Equals(primaryKeyValue))
+                    .ToArray();
+
+                ReflectionHelper.ReplaceBackingField(entity, collectionProperty.Name, navigationEntities);
+            }
+        }
+
+        private void MapNavigationProperties<TEntity>(DbSet<TEntity> dbSet)
+            where TEntity : class, new()
+        {
+            var entityType = typeof(TEntity);
+
+            var foreignKeys = entityType.GetProperties()
+                .Where(x => x.HasAttribute<ForeignKeyAttribute>())
+                .ToArray();
+
+            foreach (var foreignKey in foreignKeys)
+            {
+                var navigationPropertyName = foreignKey.GetCustomAttribute<ForeignKeyAttribute>().Name;
+                var navigationProperty = entityType.GetProperty(navigationPropertyName);
+
+                var navigationDbSet = this.dbSetProperties[navigationProperty.PropertyType].GetValue(this);
+
+                var navigationPrimaryKey = navigationProperty.PropertyType.GetProperties().First(x => x.HasAttribute<KeyAttribute>());
+
+                foreach (var entity in dbSet)
+                {
+                    var foreignKeyValue = foreignKey.GetValue(entity);
+
+                    var navigationPropertyValue = ((IEnumerable<object>)navigationDbSet)
+                        .First(x => navigationPrimaryKey.GetValue(x).Equals(foreignKeyValue));
+
+                    navigationProperty.SetValue(entity, navigationPropertyValue);
+                }
+            }
+        }
+
         private void InitializeDbSets()
         {
             foreach (var dbSet in dbSetProperties)
@@ -190,5 +264,24 @@ namespace MiniORM
             ReflectionHelper.ReplaceBackingField(this, dbSet.Name, dbSetInstance);
         }
 
+        private IEnumerable<TEntity> LoadTableEntities<TEntity>()
+            where TEntity : class, new()
+        {
+            var table = typeof(TEntity);
+            var columns = GetEntityColumnNames(table);
+            var tableName = GetTableName(table);
+            var fetchedRows = this.connection.FetchResultSet<TEntity>(tableName, columns).ToArray();
+
+            return fetchedRows;
+        }
+
+        private string GetTableName(Type table)
+        {
+            var tableName = ((TableAttribute));
+            if (tableName == null)
+            {
+                tableName
+            }
+        }
     }
 }
