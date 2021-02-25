@@ -44,14 +44,45 @@ namespace SoftUni
             //Console.WriteLine(new string('-', 20));
             //Console.WriteLine(GetEmployee147(db));
 
-            //10.Departments with More Than 5 Employees
+            ////10.Departments with More Than 5 Employees
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetDepartmentsWithMoreThan5Employees(db));
+
+            //11.Find Latest 10 Projects
             Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetDepartmentsWithMoreThan5Employees(db));
+            Console.WriteLine(GetLatestProjects(db));
+        }
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            var lastProjects = context.Projects
+                .Select(p => new
+                {
+                    p.Name,
+                    p.Description,
+                    p.StartDate,
+                })
+                .OrderByDescending(x => x.StartDate)
+                .Take(10)
+                .OrderBy(x => x.Name)
+                .ToList();
+
+            var sb = new StringBuilder();
+
+            foreach (var project in lastProjects)
+            {
+                sb.AppendLine($"{project.Name}")
+                    .AppendLine($"{project.Description}");
+
+                var formattedDate = string.Format($"{project.StartDate }", "M/d/yyyy h:mm:ss tt");
+                sb.AppendLine(formattedDate);
+            }
+
+            return sb.ToString().TrimEnd();
         }
         public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
         {
             var departments = context.Departments
-                .Include(e=>e.Employees)
+                .Include(e => e.Employees)
                 .Where(de => de.Employees.Count() > 5)
                 .Select(d => new
                 {
