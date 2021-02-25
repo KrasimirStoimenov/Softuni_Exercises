@@ -16,29 +16,70 @@ namespace SoftUni
 
             var db = new SoftUniContext();
 
-            //3.Employees Full Information
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetEmployeesFullInformation(db));
+            ////3.Employees Full Information
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetEmployeesFullInformation(db));
 
-            //4.Employees with Salary Over 50 000
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetEmployeesWithSalaryOver50000(db));
+            ////4.Employees with Salary Over 50 000
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetEmployeesWithSalaryOver50000(db));
 
-            //5.Employees from Research and Development
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetEmployeesFromResearchAndDevelopment(db));
+            ////5.Employees from Research and Development
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetEmployeesFromResearchAndDevelopment(db));
 
-            //6.Adding a New Address and Updating Employee
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(AddNewAddressToEmployee(db));
+            ////6.Adding a New Address and Updating Employee
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(AddNewAddressToEmployee(db));
 
-            //7.Employees and Projects
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetEmployeesInPeriod(db));
+            ////7.Employees and Projects
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetEmployeesInPeriod(db));
 
-            //8.Addresses by Town
+            ////8.Addresses by Town
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetAddressesByTown(db));
+
+            ////9.Employee 147
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetEmployee147(db));
+
+            //10.Departments with More Than 5 Employees
             Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetAddressesByTown(db));
+            Console.WriteLine(GetDepartmentsWithMoreThan5Employees(db));
+        }
+        public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
+        {
+
+        }
+        public static string GetEmployee147(SoftUniContext context)
+        {
+            var employee147 = context.Employees
+                .Where(x => x.EmployeeId == 147)
+                .Select(x => new
+                {
+                    x.FirstName,
+                    x.LastName,
+                    x.JobTitle,
+                    Projects = x.EmployeesProjects.Select(p => new
+                    {
+                        p.Project.Name
+                    })
+                    .OrderBy(p=>p.Name)
+                    .ToList()
+                })
+                .FirstOrDefault();
+
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"{employee147.FirstName} {employee147.LastName} - {employee147.JobTitle}");
+
+            foreach (var project in employee147.Projects)
+            {
+                sb.AppendLine($"{project.Name}");
+            }
+
+            return sb.ToString().TrimEnd();
         }
         public static string GetAddressesByTown(SoftUniContext context)
         {
