@@ -2,6 +2,7 @@
 using SoftUni.Data;
 using SoftUni.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -48,9 +49,54 @@ namespace SoftUni
             //Console.WriteLine(new string('-', 20));
             //Console.WriteLine(GetDepartmentsWithMoreThan5Employees(db));
 
-            //11.Find Latest 10 Projects
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(GetLatestProjects(db));
+            ////11.Find Latest 10 Projects
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(GetLatestProjects(db));
+
+            ////12.Increase Salaries
+            //Console.WriteLine(new string('-', 20));
+            //Console.WriteLine(IncreaseSalaries(db));
+        }
+        public static string IncreaseSalaries(SoftUniContext context)
+        {
+            var departments = new List<string>()
+            {
+                "Engineering",
+                "Tool Design",
+                "Marketing",
+                "Information Services"
+            };
+
+            var employees = context.Employees
+                .Where(d => departments.Contains(d.Department.Name))
+                .ToList();
+
+            foreach (var emp in employees)
+            {
+                emp.Salary *= 1.12M;
+            }
+
+            context.SaveChanges();
+
+            var sb = new StringBuilder();
+
+            var orderedEmployees = employees
+                .Select(x => new
+                {
+                    x.FirstName,
+                    x.LastName,
+                    x.Salary
+                })
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName);
+
+
+            foreach (var emp in orderedEmployees)
+            {
+                sb.AppendLine($"{emp.FirstName} {emp.LastName} (${emp.Salary:F2})");
+            }
+
+            return sb.ToString().TrimEnd();
         }
         public static string GetLatestProjects(SoftUniContext context)
         {
