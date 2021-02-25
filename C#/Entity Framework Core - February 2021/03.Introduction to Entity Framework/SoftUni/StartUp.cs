@@ -17,53 +17,90 @@ namespace SoftUni
 
             var db = new SoftUniContext();
 
-            ////3.Employees Full Information
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetEmployeesFullInformation(db));
+            //3.Employees Full Information
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetEmployeesFullInformation(db));
 
-            ////4.Employees with Salary Over 50 000
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetEmployeesWithSalaryOver50000(db));
+            //4.Employees with Salary Over 50 000
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetEmployeesWithSalaryOver50000(db));
 
-            ////5.Employees from Research and Development
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetEmployeesFromResearchAndDevelopment(db));
+            //5.Employees from Research and Development
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetEmployeesFromResearchAndDevelopment(db));
 
-            ////6.Adding a New Address and Updating Employee
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(AddNewAddressToEmployee(db));
+            //6.Adding a New Address and Updating Employee
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(AddNewAddressToEmployee(db));
 
-            ////7.Employees and Projects
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetEmployeesInPeriod(db));
+            //7.Employees and Projects
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetEmployeesInPeriod(db));
 
-            ////8.Addresses by Town
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetAddressesByTown(db));
+            //8.Addresses by Town
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetAddressesByTown(db));
 
-            ////9.Employee 147
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetEmployee147(db));
+            //9.Employee 147
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetEmployee147(db));
 
-            ////10.Departments with More Than 5 Employees
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetDepartmentsWithMoreThan5Employees(db));
+            //10.Departments with More Than 5 Employees
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetDepartmentsWithMoreThan5Employees(db));
 
-            ////11.Find Latest 10 Projects
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetLatestProjects(db));
+            //11.Find Latest 10 Projects
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetLatestProjects(db));
 
-            ////12.Increase Salaries
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(IncreaseSalaries(db));
+            //12.Increase Salaries
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(IncreaseSalaries(db));
 
-            ////13.Find Employees by First Name Starting with "Sa"
-            //Console.WriteLine(new string('-', 20));
-            //Console.WriteLine(GetEmployeesByFirstNameStartingWithSa(db));
+            //13.Find Employees by First Name Starting with "Sa"
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(GetEmployeesByFirstNameStartingWithSa(db));
 
             //14.Delete Project by Id
-            Console.WriteLine(new string('-', 20));
-            Console.WriteLine(DeleteProjectById(db));
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(DeleteProjectById(db));
+
+            //15.Remove Town
+                Console.WriteLine(new string('-', 20));
+                Console.WriteLine(RemoveTown(db));
+        }
+        public static string RemoveTown(SoftUniContext context)
+        {
+            var seattleTown = context.Towns
+                .FirstOrDefault(x => x.Name == "Seattle");
+
+            var addressesInTown = context.Addresses
+                .Where(x => x.Town == seattleTown)
+                .ToList();
+
+            foreach (var address in addressesInTown)
+            {
+                var employees = context.Employees
+                    .Where(x => x.AddressId == address.AddressId)
+                    .ToList();
+
+                foreach (var emp in employees)
+                {
+                    emp.Address = null;
+                }
+            }
+
+            foreach (var address in addressesInTown)
+            {
+                context.Addresses.Remove(address);
+            }
+
+            context.Towns.Remove(seattleTown);
+
+            context.SaveChanges();
+
+            var returnString = $"{addressesInTown.Count} addresses in Seattle were deleted";
+            return returnString;
         }
         public static string DeleteProjectById(SoftUniContext context)
         {
