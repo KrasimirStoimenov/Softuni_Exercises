@@ -60,6 +60,40 @@ namespace SoftUni
             ////13.Find Employees by First Name Starting with "Sa"
             //Console.WriteLine(new string('-', 20));
             //Console.WriteLine(GetEmployeesByFirstNameStartingWithSa(db));
+
+            //14.Delete Project by Id
+            Console.WriteLine(new string('-', 20));
+            Console.WriteLine(DeleteProjectById(db));
+        }
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            var projectToDelete = context.Projects
+                .Where(p => p.ProjectId == 2)
+                .FirstOrDefault();
+            var employeeProjects = context.EmployeesProjects
+                .Include(e => e.Employee)
+                .Where(p => p.ProjectId == 2)
+                .ToList();
+
+            foreach (var empProject in employeeProjects)
+            {
+                empProject.Project = null;
+                context.EmployeesProjects.Remove(empProject);
+            }
+            context.Projects.Remove(projectToDelete);
+
+            context.SaveChanges();
+
+            var projects = context.Projects
+                .Take(10)
+                .ToList();
+
+            var sb = new StringBuilder();
+            foreach (var project in projects)
+            {
+                sb.AppendLine($"{project.Name}");
+            }
+            return sb.ToString().TrimEnd();
         }
         public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
         {
