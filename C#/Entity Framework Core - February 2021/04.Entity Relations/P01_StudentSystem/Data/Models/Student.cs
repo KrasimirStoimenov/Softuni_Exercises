@@ -15,8 +15,8 @@ namespace P01_StudentSystem.Data.Models
         public DateTime RegisteredOn { get; set; }
         public DateTime? Birthday { get; set; }
 
-        public ICollection<Homework> HomeworkSubmissions { get; set; }
-        public ICollection<StudentCourse> CourseEnrollments { get; set; }
+        public ICollection<Homework> HomeworkSubmissions { get; set; } = new HashSet<Homework>();
+        public ICollection<StudentCourse> CourseEnrollments { get; set; } = new HashSet<StudentCourse>();
 
     }
 }
