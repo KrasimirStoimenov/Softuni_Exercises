@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using P01_HospitalDatabase.Data;
 
 namespace P01_HospitalDatabase
 {
-    class Program
+    class StartUp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var db = new HospitalContext();
+            db.Database.Migrate();
         }
     }
 }
