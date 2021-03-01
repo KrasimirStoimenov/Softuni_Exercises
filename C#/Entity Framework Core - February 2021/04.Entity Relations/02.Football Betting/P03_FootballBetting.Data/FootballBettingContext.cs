@@ -23,7 +23,8 @@ namespace P03_FootballBetting.Data
         public DbSet<PlayerStatistic> PlayerStatistics { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Bet> Bets { get; set; }
-
+        public DbSet<Position> Positions { get; set; }
+		public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
