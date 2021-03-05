@@ -5,6 +5,7 @@
     using System.Text;
     using Data;
     using Initializer;
+    using Microsoft.EntityFrameworkCore;
 
     public class StartUp
     {
@@ -21,13 +22,14 @@
         public static string ExportAlbumsInfo(MusicHubDbContext context, int producerId)
         {
             var producerAlbums = context.Albums
+                .Include(x => x.Songs)
                 .Where(x => x.ProducerId == producerId)
                 .Select(a => new
                 {
                     AlbumName = a.Name,
                     AlbumReleaseDate = a.ReleaseDate,
                     ProducerName = a.Producer.Name,
-                    AlbumTotalPrice = a.Songs.Sum(x=>x.Price),
+                    AlbumTotalPrice = a.Price,
                     AlbumSongs = a.Songs.Select(s => new
                     {
                         SongName = s.Name,
@@ -38,8 +40,8 @@
                     .ThenBy(s => s.SongWriterName)
                     .ToList()
                 })
-                .OrderByDescending(x => x.AlbumTotalPrice)
-                .ToList();
+                .ToList()
+                .OrderByDescending(x => x.AlbumTotalPrice);
 
             var sb = new StringBuilder();
 
