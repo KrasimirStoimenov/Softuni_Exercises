@@ -51,7 +51,20 @@
             //10. Book Search by Author
             Console.WriteLine(GetBooksByAuthor(db, "R"));
             Console.WriteLine(new string('-', 40));
+
+            //11. Count Books
+            Console.WriteLine(CountBooks(db, 12));
+            Console.WriteLine(new string('-', 40));
         }
+        public static int CountBooks(BookShopContext context, int lengthCheck)
+        {
+            var books = context.Books
+                .Where(book => book.Title.Length > lengthCheck)
+                .ToList();
+
+            return books.Count;
+        }
+
         public static string GetBooksByAuthor(BookShopContext context, string input)
         {
             var books = context.Books
