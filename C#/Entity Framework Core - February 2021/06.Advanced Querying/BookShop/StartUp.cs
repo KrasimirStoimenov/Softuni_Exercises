@@ -30,7 +30,32 @@
             Console.WriteLine(GetBooksNotReleasedIn(db, 2000));
             Console.WriteLine(new string('-', 40));
 
+            //06. Book Titles by Category
+            Console.WriteLine(GetBooksByCategory(db, "horror mystery drama    "));
+            Console.WriteLine(new string('-', 40));
+
         }
+        public static string GetBooksByCategory(BookShopContext context, string input)
+        {
+            var categories = input
+                .ToLower()
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+
+            var books = context.BooksCategories
+                .Where(category => categories.Contains(category.Category.Name.ToLower()))
+                .Select(book => new
+                {
+                    Title = book.Book.Title
+                })
+                .OrderBy(bt => bt.Title)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, books.Select(t => t.Title));
+
+            return result;
+        }
+
         public static string GetBooksNotReleasedIn(BookShopContext context, int year)
         {
             var books = context.Books
