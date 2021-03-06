@@ -4,6 +4,7 @@
     using Data;
     using Initializer;
     using System;
+    using System.Globalization;
     using System.Linq;
 
     public class StartUp
@@ -34,7 +35,31 @@
             Console.WriteLine(GetBooksByCategory(db, "horror mystery drama    "));
             Console.WriteLine(new string('-', 40));
 
+            //07. Released Before Date
+            Console.WriteLine(GetBooksReleasedBefore(db, "12-04-1992"));
+            Console.WriteLine(new string('-', 40));
         }
+        public static string GetBooksReleasedBefore(BookShopContext context, string date)
+        {
+            var dateFormat = DateTime.ParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+            var books = context.Books
+                .Where(book => book.ReleaseDate < dateFormat)
+                .Select(x => new
+                {
+                    ReleaseDate = x.ReleaseDate,
+                    Title = x.Title,
+                    Type = x.EditionType,
+                    Price = x.Price
+                })
+                .OrderByDescending(x => x.ReleaseDate)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, books.Select(x => $"{x.Title} - {x.Type} - ${x.Price:F2}"));
+
+            return result;
+        }
+
         public static string GetBooksByCategory(BookShopContext context, string input)
         {
             var categories = input
