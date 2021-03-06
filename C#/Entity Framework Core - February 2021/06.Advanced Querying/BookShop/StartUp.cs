@@ -43,7 +43,46 @@
             //08. Author Search
             Console.WriteLine(GetAuthorNamesEndingIn(db, "e"));
             Console.WriteLine(new string('-', 40));
+
+            //09. Book Search
+            Console.WriteLine(GetBookTitlesContaining(db, "sK"));
+            Console.WriteLine(new string('-', 40));
+
+            //10. Book Search by Author
+            Console.WriteLine(GetBooksByAuthor(db, "R"));
+            Console.WriteLine(new string('-', 40));
         }
+        public static string GetBooksByAuthor(BookShopContext context, string input)
+        {
+            var books = context.Books
+                .Where(book => book.Author.LastName.ToLower().StartsWith(input.ToLower()))
+                .Select(x => new
+                {
+                    Id = x.BookId,
+                    Title = x.Title,
+                    Author = $"{x.Author.FirstName} {x.Author.LastName}"
+                })
+                .OrderBy(x => x.Id)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, books.Select(x => $"{x.Title} ({x.Author})"));
+
+            return result;
+        }
+
+        public static string GetBookTitlesContaining(BookShopContext context, string input)
+        {
+            var books = context.Books
+                .Where(x => x.Title.ToLower().Contains(input.ToLower()))
+                .Select(x => x.Title)
+                .OrderBy(x => x)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, books);
+
+            return result;
+        }
+
         public static string GetAuthorNamesEndingIn(BookShopContext context, string input)
         {
             var authors = context.Authors
