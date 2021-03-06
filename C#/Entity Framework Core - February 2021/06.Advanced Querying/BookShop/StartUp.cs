@@ -3,6 +3,7 @@
     using BookShop.Models.Enums;
     using Data;
     using Initializer;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Globalization;
     using System.Linq;
@@ -38,7 +39,29 @@
             //07. Released Before Date
             Console.WriteLine(GetBooksReleasedBefore(db, "12-04-1992"));
             Console.WriteLine(new string('-', 40));
+
+            //08. Author Search
+            Console.WriteLine(GetAuthorNamesEndingIn(db, "e"));
+            Console.WriteLine(new string('-', 40));
         }
+        public static string GetAuthorNamesEndingIn(BookShopContext context, string input)
+        {
+            var authors = context.Authors
+                .Where(x => EF.Functions.Like(x.FirstName, $"%{input}"))
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName
+                })
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, authors.Select(a => $"{a.FirstName} {a.LastName}"));
+
+            return result;
+        }
+
         public static string GetBooksReleasedBefore(BookShopContext context, string date)
         {
             var dateFormat = DateTime.ParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture);
