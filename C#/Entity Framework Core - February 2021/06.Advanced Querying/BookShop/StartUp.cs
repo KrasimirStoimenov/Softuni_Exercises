@@ -55,7 +55,27 @@
             //11. Count Books
             Console.WriteLine(CountBooks(db, 12));
             Console.WriteLine(new string('-', 40));
+
+            //12. Total Book Copies
+            Console.WriteLine(CountCopiesByAuthor(db));
+            Console.WriteLine(new string('-', 40));
         }
+        public static string CountCopiesByAuthor(BookShopContext context)
+        {
+            var copies = context.Authors
+                .Select(x => new
+                {
+                    AuthorName = $"{x.FirstName} {x.LastName}",
+                    Copies = x.Books.Sum(book => book.Copies)
+                })
+                .OrderByDescending(x => x.Copies)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, copies.Select(x=>$"{x.AuthorName} - {x.Copies}"));
+
+            return result;
+        }
+
         public static int CountBooks(BookShopContext context, int lengthCheck)
         {
             var books = context.Books
