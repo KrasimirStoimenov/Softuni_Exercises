@@ -60,6 +60,57 @@
             Console.WriteLine(CountCopiesByAuthor(db));
             Console.WriteLine(new string('-', 40));
         }
+
+        public static string GetMostRecentBooks(BookShopContext context)
+        {
+            var booksInCategory = context.Categories
+                .Select(c => new
+                {
+                    CategoryName = c.Name,
+                    Books = c.CategoryBooks.Select(b => new
+                    {
+                        BookTitle = b.Book.Title,
+                        ReleaseDate = b.Book.ReleaseDate
+                    })
+                    .OrderByDescending(b => b.ReleaseDate)
+                    .Take(3)
+                    .ToList()
+                })
+                .OrderBy(x => x.CategoryName)
+                .ToList();
+
+            var sb = new StringBuilder();
+
+            foreach (var category in booksInCategory)
+            {
+                sb.AppendLine($"--{category.CategoryName}");
+
+                foreach (var book in category.Books)
+                {
+                    sb.AppendLine($"{book.BookTitle} ({book.ReleaseDate.Value.Year})");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GetTotalProfitByCategory(BookShopContext context)
+        {
+            var categoriesProfit = context.Categories
+                .Select(x => new
+                {
+                    CategoryName = x.Name,
+                    Profit = x.CategoryBooks.Sum(b => b.Book.Price * b.Book.Copies)
+                })
+                .OrderByDescending(x => x.Profit)
+                .ThenBy(x => x.CategoryName)
+                .ToList();
+
+            var result = string.Join(Environment.NewLine, categoriesProfit.Select(x => $"{x.CategoryName} ${x.Profit:F2}"));
+
+            return result;
+        }
+
         public static string CountCopiesByAuthor(BookShopContext context)
         {
             var copies = context.Authors
@@ -71,7 +122,7 @@
                 .OrderByDescending(x => x.Copies)
                 .ToList();
 
-            var result = string.Join(Environment.NewLine, copies.Select(x=>$"{x.AuthorName} - {x.Copies}"));
+            var result = string.Join(Environment.NewLine, copies.Select(x => $"{x.AuthorName} - {x.Copies}"));
 
             return result;
         }
