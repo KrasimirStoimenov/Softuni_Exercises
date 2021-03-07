@@ -71,6 +71,25 @@
 
             //15. Increase Prices
             IncreasePrices(db);
+            Console.WriteLine(new string('-', 40));
+
+            //16. Remove Books
+            Console.WriteLine(RemoveBooks(db));
+            Console.WriteLine(new string('-', 40));
+        }
+        public static int RemoveBooks(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(b => b.Copies < 4200)
+                .ToList();
+
+            context.Books.RemoveRange(books);
+
+            context.SaveChanges();
+
+            return books.Count;
+        }
+
         public static void IncreasePrices(BookShopContext context)
         {
             var books = context.Books
