@@ -7,6 +7,7 @@
     using System;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
 
     public class StartUp
     {
@@ -59,6 +60,29 @@
             //12. Total Book Copies
             Console.WriteLine(CountCopiesByAuthor(db));
             Console.WriteLine(new string('-', 40));
+
+            //13. Profit by Category
+            Console.WriteLine(GetTotalProfitByCategory(db));
+            Console.WriteLine(new string('-', 40));
+
+            //14. Most Recent Books
+            Console.WriteLine(GetMostRecentBooks(db));
+            Console.WriteLine(new string('-', 40));
+
+            //15. Increase Prices
+            IncreasePrices(db);
+        public static void IncreasePrices(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(b => b.ReleaseDate.Value.Year < 2010)
+                .ToList();
+
+            foreach (var book in books)
+            {
+                book.Price += 5;
+            }
+
+            context.SaveChanges();
         }
 
         public static string GetMostRecentBooks(BookShopContext context)
