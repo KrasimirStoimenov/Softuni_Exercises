@@ -1,10 +1,13 @@
 ﻿namespace FastFood.Core.Controllers
 {
     using System;
+    using System.Linq;
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Data;
+    using FastFood.Core.ViewModels.Employees;
+    using FastFood.Models;
     using Microsoft.AspNetCore.Mvc;
-    using ViewModels.Employees;
 
     public class EmployeesController : Controller
     {
@@ -19,18 +22,36 @@
 
         public IActionResult Register()
         {
-            throw new NotImplementedException();
+            var positions = this.context.Positions
+                .ProjectTo<RegisterEmployeeViewModel>(this.mapper.ConfigurationProvider)
+                .ToList();
+
+            return this.View(positions);
         }
 
         [HttpPost]
         public IActionResult Register(RegisterEmployeeInputModel model)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return this.RedirectToAction("Error", "Home");
+            }
+
+            var employee = this.mapper.Map<Employee>(model);
+
+            this.context.Employees.Add(employee);
+            this.context.SaveChanges();
+
+            return RedirectToAction("All");
         }
 
         public IActionResult All()
         {
-            throw new NotImplementedException();
+            var employees = this.context.Employees
+                .ProjectTo<EmployeesAllViewModel>(this.mapper.ConfigurationProvider)
+                .ToList();
+
+            return this.View(employees);
         }
     }
 }
