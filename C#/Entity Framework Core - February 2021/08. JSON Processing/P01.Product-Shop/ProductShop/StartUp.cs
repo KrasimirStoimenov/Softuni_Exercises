@@ -26,6 +26,53 @@ namespace ProductShop
 
             //Query 3. Export Categories by Products Count
             Console.WriteLine(GetCategoriesByProductsCount(db));
+
+            //Query 4. Export Users and Products
+            Console.WriteLine(GetUsersWithProducts(db));
+        }
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Include(x=>x.ProductsSold)
+                .ToList()
+                .Where(u => u.ProductsSold.Any(b => b.BuyerId != null))
+                .Select(x => new
+                {
+                    firstName = x.FirstName,
+                    lastName = x.LastName,
+                    age = x.Age,
+                    soldProducts = new
+                    {
+                        count = x.ProductsSold
+                            .Where(b => b.BuyerId != null)
+                            .Count(),
+                        products = x.ProductsSold
+                            .Where(b => b.BuyerId != null)
+                            .Select(pr => new
+                            {
+                                name = pr.Name,
+                                price = pr.Price
+                            })
+                    }
+                })
+                .OrderByDescending(x => x.soldProducts.products.Count())
+                .ToList();
+
+            var resultObj = new
+            {
+                usersCount = users.Count(),
+                users = users
+            };
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+
+            };
+
+            var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented, settings);
+
+            return resultJson;
         }
         //Query 3. Export Categories by Products Count
         public static string GetCategoriesByProductsCount(ProductShopContext context)
