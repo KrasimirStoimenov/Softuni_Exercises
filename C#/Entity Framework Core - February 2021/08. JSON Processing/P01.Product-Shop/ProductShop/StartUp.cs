@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ProductShop.Data;
 using ProductShop.ImportQueries;
@@ -23,12 +24,33 @@ namespace ProductShop
             //Query 2. Export Successfully Sold Products
             Console.WriteLine(GetProductsInRange(db));
 
+            //Query 3. Export Categories by Products Count
+            Console.WriteLine(GetCategoriesByProductsCount(db));
         }
-        //Query 6. Export Successfully Sold Products
+        //Query 3. Export Categories by Products Count
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var categories = context.Categories
+                .Select(x => new
+                {
+                    category = x.Name,
+                    productsCount = x.CategoryProducts.Count,
+                    averagePrice = x.CategoryProducts.Average(pr => pr.Product.Price).ToString("F2"),
+                    totalRevenue = x.CategoryProducts.Sum(pr => pr.Product.Price).ToString("F2")
+                })
+                .OrderByDescending(x => x.productsCount)
+                .ToList();
+
+            var resultJson = JsonConvert.SerializeObject(categories, Formatting.Indented);
+
+            return resultJson;
+        }
+
+        //Query 2. Export Successfully Sold Products
         public static string GetSoldProducts(ProductShopContext context)
         {
             var users = context.Users
-                .Where(x=>x.ProductsSold.Any(y=>y.Buyer!=null))
+                .Where(x => x.ProductsSold.Any(y => y.Buyer != null))
                 .Select(x => new
                 {
                     firstName = x.FirstName,
@@ -71,6 +93,7 @@ namespace ProductShop
 
             return resultJson;
         }
+
         public static void ImportQueriesTask(ProductShopContext db)
         {
             //Query 2. Import Users
