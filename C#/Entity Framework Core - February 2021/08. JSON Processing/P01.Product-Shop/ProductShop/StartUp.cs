@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 using ProductShop.Data;
 using ProductShop.ImportQueries;
 
@@ -10,11 +12,41 @@ namespace ProductShop
         public static void Main(string[] args)
         {
             var db = new ProductShopContext();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
+            //db.Database.EnsureDeleted();
+            //db.Database.EnsureCreated();
+            //
+            //ImportQueriesTask(db);
 
-            ImportQueriesTask(db);
+            //Query 1. Export Products in Range
+            Console.WriteLine(GetProductsInRange(db));
 
+            //Query 2. Export Successfully Sold Products
+            Console.WriteLine(GetProductsInRange(db));
+
+        }
+        //Query 6. Export Successfully Sold Products
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+
+        }
+
+        //Query 1. Export Products in Range
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            var products = context.Products
+                .Where(x => x.Price >= 500 && x.Price <= 1000)
+                .Select(x => new
+                {
+                    name = x.Name,
+                    price = x.Price,
+                    seller = x.Seller.FirstName + " " + x.Seller.LastName
+                })
+                .OrderBy(x => x.price)
+                .ToList();
+
+            var resultJson = JsonConvert.SerializeObject(products, Formatting.Indented);
+
+            return resultJson;
         }
         public static void ImportQueriesTask(ProductShopContext db)
         {
