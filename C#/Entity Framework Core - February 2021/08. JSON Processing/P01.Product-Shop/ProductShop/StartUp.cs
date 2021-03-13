@@ -27,7 +27,30 @@ namespace ProductShop
         //Query 6. Export Successfully Sold Products
         public static string GetSoldProducts(ProductShopContext context)
         {
+            var users = context.Users
+                .Where(x=>x.ProductsSold.Any(y=>y.Buyer!=null))
+                .Select(x => new
+                {
+                    firstName = x.FirstName,
+                    lastName = x.LastName,
+                    soldProducts = x.ProductsSold
+                        .Where(b => b.Buyer != null)
+                        .Select(p => new
+                        {
+                            name = p.Name,
+                            price = p.Price,
+                            buyerFirstName = p.Buyer.FirstName,
+                            buyerLastName = p.Buyer.LastName
+                        })
+                        .ToList()
+                })
+                .OrderBy(x => x.lastName)
+                .ThenBy(x => x.firstName)
+                .ToList();
 
+            var resultJson = JsonConvert.SerializeObject(users, Formatting.Indented);
+
+            return resultJson;
         }
 
         //Query 1. Export Products in Range
