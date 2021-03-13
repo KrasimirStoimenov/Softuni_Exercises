@@ -22,7 +22,24 @@ namespace ProductShop
             //Query 3. Import Products
             var inputJson3 = File.ReadAllText("../../../Datasets/products.json");
             Console.WriteLine(ImportProducts(db, inputJson3));
+
+            //Query 4. Import Categories
+            var inputJson4 = File.ReadAllText("../../../Datasets/categories.json");
+            Console.WriteLine(ImportCategories(db, inputJson4));
         }
+        //Query 4. Import Categories
+        public static string ImportCategories(ProductShopContext context, string inputJson)
+        {
+            var categories = JsonConvert.DeserializeObject<Category[]>(inputJson)
+                .Where(x => x.Name != null)
+                .ToArray();
+
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+
+            return $"Successfully imported {categories.Length}";
+        }
+
         //Query 3. Import Products
         public static string ImportProducts(ProductShopContext context, string inputJson)
         {
