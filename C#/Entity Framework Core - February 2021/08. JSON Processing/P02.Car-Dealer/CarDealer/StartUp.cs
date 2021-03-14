@@ -28,6 +28,48 @@ namespace CarDealer
             //Query 02. Import Parts
             var partsJson = File.ReadAllText("../../../Datasets/parts.json");
             ImportParts(db, partsJson);
+
+            //Query 03. Import Cars
+            var carsJson = File.ReadAllText("../../../Datasets/cars.json");
+            ImportCars(db, carsJson);
+        }
+
+        //Query 03. Import Cars
+        public static string ImportCars(CarDealerContext context, string inputJson)
+        {
+            InitializeAutoMapper();
+
+            var carsDto = JsonConvert.DeserializeObject<IEnumerable<CarInputModel>>(inputJson);
+
+            var cars = new List<Car>();
+
+            foreach (var car in carsDto)
+            {
+                var currentCar = new Car()
+                {
+                    Make = car.Make,
+                    Model = car.Model,
+                    TravelledDistance = car.TravelledDistance,
+                };
+
+                foreach (var partId in car.PartsId.Distinct())
+                {
+                    var currentPart = new PartCar()
+                    {
+                        Car = currentCar,
+                        PartId = partId
+                    };
+
+                    currentCar.PartCars.Add(currentPart);
+                }
+
+                cars.Add(currentCar);
+            }
+
+            context.Cars.AddRange(cars);
+            context.SaveChanges();
+
+            return $"Successfully imported {cars.Count}.";
         }
 
         //Query 02. Import Parts
