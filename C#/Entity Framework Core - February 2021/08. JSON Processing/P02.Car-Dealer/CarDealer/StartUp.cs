@@ -7,6 +7,7 @@ using CarDealer.Data;
 using CarDealer.DTO;
 using CarDealer.Models;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarDealer
 {
@@ -22,7 +23,28 @@ namespace CarDealer
 
             //Query 01. Import Suppliers
             var suppliersJson = File.ReadAllText("../../../Datasets/suppliers.json");
-            Console.WriteLine(ImportSuppliers(db, suppliersJson));
+            ImportSuppliers(db, suppliersJson);
+
+            //Query 02. Import Parts
+            var partsJson = File.ReadAllText("../../../Datasets/parts.json");
+            ImportParts(db, partsJson);
+        }
+
+        //Query 02. Import Parts
+        public static string ImportParts(CarDealerContext context, string inputJson)
+        {
+            InitializeAutoMapper();
+
+            var partsDto = JsonConvert.DeserializeObject<IEnumerable<PartInputModel>>(inputJson);
+            var parts = mapper.Map<IEnumerable<Part>>(partsDto);
+
+            var contextSuppliers = context.Suppliers.Select(x => x.Id).ToList();
+            parts = parts.Where(x => contextSuppliers.Contains(x.SupplierId)).ToList();
+
+            context.Parts.AddRange(parts);
+            context.SaveChanges();
+
+            return $"Successfully imported {parts.Count()}.";
         }
 
         //Query 01. Import Suppliers
@@ -38,6 +60,7 @@ namespace CarDealer
 
             return $"Successfully imported {suppliers.Count()}.";
         }
+
         private static void InitializeAutoMapper()
         {
             var config = new MapperConfiguration(cfg =>
