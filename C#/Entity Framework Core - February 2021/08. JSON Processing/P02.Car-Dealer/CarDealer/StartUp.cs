@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using AutoMapper;
 using CarDealer.Data;
 using CarDealer.DTO.OutputModels;
@@ -26,11 +27,40 @@ namespace CarDealer
             //Console.WriteLine(GetOrderedCustomers(db));
 
             //Query 02. Export Cars from Make Toyota
-            Console.WriteLine(GetCarsFromMakeToyota(db));
+            //Console.WriteLine(GetCarsFromMakeToyota(db));
 
             //Query 03. Export Local Suppliers
             //Console.WriteLine(GetLocalSuppliers(db));
+
+            //Query 04. Export Cars with Their List of Parts
+            Console.WriteLine(GetCarsWithTheirListOfParts(db));
         }
+        //Query 04. Export Cars with Their List of Parts
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            var cars = context.Cars
+                .Select(x => new
+                {
+                    car = new
+                    {
+                        Make = x.Make,
+                        Model = x.Model,
+                        TravelledDistance = x.TravelledDistance,
+                    },
+                    parts = x.PartCars.Select(p => new
+                    {
+                        Name = p.Part.Name,
+                        Price = p.Part.Price.ToString("F2")
+                    })
+
+                })
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(cars, Formatting.Indented);
+
+            return json;
+        }
+
         //Query 03. Export Local Suppliers
         public static string GetLocalSuppliers(CarDealerContext context)
         {
