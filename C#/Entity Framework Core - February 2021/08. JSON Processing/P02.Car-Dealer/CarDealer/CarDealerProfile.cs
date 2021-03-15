@@ -12,6 +12,7 @@ namespace CarDealer
             CreateMap<PartInputModel, Part>();
             CreateMap<CarInputModel, Car>();
             CreateMap<CustomerInputModel, Customer>();
+            CreateMap<SaleInputModel, Sale>();
         }
     }
 }

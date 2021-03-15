@@ -9,6 +9,7 @@ using CarDealer.Models;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Castle.Core.Resource;
+using System.Security.Cryptography;
 
 namespace CarDealer
 {
@@ -37,7 +38,25 @@ namespace CarDealer
             //Query 04. Import Customers
             var customersJson = File.ReadAllText("../../../Datasets/customers.json");
             ImportCustomers(db, customersJson);
+
+            //Query 05. Import Sales
+            var salesJson = File.ReadAllText("../../../Datasets/sales.json");
+            ImportSales(db, salesJson);
         }
+        //Query 05. Import Sales
+        public static string ImportSales(CarDealerContext context, string inputJson)
+        {
+            InitializeAutoMapper();
+
+            var salesDto = JsonConvert.DeserializeObject<IEnumerable<SaleInputModel>>(inputJson);
+            var sales = mapper.Map<IEnumerable<Sale>>(salesDto);
+
+            context.Sales.AddRange(sales);
+            context.SaveChanges();
+
+            return $"Successfully imported {sales.Count()}.";
+        }
+
         //Query 04. Import Customers
         public static string ImportCustomers(CarDealerContext context, string inputJson)
         {
