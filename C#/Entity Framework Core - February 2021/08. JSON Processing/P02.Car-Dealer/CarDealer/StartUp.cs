@@ -1,21 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using AutoMapper;
 using CarDealer.Data;
+using CarDealer.DTO.OutputModels;
 using CarDealer.ImportExportData;
+using Newtonsoft.Json;
 
 namespace CarDealer
 {
     public class StartUp
     {
+        private static IMapper mapper;
         public static void Main(string[] args)
         {
             var db = new CarDealerContext();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
+            //db.Database.EnsureDeleted();
+            //db.Database.EnsureCreated();
+            //
+            //ImportDataQueries(db);
 
-            ImportDataQueries(db);
-            
+            //Query 01. Export Ordered Customers
+            Console.WriteLine(GetOrderedCustomers(db));
 
+        }
+        //Query 01. Export Ordered Customers
+        public static string GetOrderedCustomers(CarDealerContext context)
+        {
+            InitializeAutoMapper();
+
+            var customers = context.Customers
+                .OrderBy(x => x.BirthDate)
+                .ThenBy(x => x.IsYoungDriver)
+                .ToList();
+
+            var customersDto = mapper.Map<IEnumerable<CustomerOutputModel>>(customers);
+
+            var json = JsonConvert.SerializeObject(customersDto, Formatting.Indented);
+
+            return json;
         }
 
         private static void ImportDataQueries(CarDealerContext db)
@@ -40,5 +64,15 @@ namespace CarDealer
             var salesJson = File.ReadAllText("../../../Datasets/sales.json");
             Console.WriteLine(ImportData.ImportSales(db, salesJson));
         }
+        private static void InitializeAutoMapper()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<CarDealerProfile>();
+            });
+
+            mapper = new Mapper(config);
+        }
+
     }
 }

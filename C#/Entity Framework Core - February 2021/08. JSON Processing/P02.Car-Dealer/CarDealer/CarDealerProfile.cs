@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using CarDealer.DTO;
+using CarDealer.DTO.InputModels;
+using CarDealer.DTO.OutputModels;
 using CarDealer.Models;
 
 namespace CarDealer
@@ -13,6 +14,9 @@ namespace CarDealer
             CreateMap<CarInputModel, Car>();
             CreateMap<CustomerInputModel, Customer>();
             CreateMap<SaleInputModel, Sale>();
+
+            CreateMap<Customer, CustomerOutputModel>()
+                .ForMember(x => x.BirthDate, y => y.MapFrom(c => c.BirthDate.ToString("dd/MM/yyyy")));
         }
     }
 }

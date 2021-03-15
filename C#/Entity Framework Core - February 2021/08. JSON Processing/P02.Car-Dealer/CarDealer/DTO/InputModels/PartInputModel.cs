@@ -1,4 +1,4 @@
-﻿namespace CarDealer.DTO
+﻿namespace CarDealer.DTO.InputModels
 {
     public class PartInputModel
     {

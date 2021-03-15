@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CarDealer.Data;
-using CarDealer.DTO;
+using CarDealer.DTO.InputModels;
 using CarDealer.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;

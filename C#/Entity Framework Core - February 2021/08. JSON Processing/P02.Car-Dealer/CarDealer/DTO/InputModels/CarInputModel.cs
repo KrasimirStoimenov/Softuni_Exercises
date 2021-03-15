@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CarDealer.Models;
 
-namespace CarDealer.DTO
+namespace CarDealer.DTO.InputModels
 {
     public class CarInputModel
     {
