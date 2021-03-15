@@ -26,9 +26,10 @@ namespace CarDealer
             //Console.WriteLine(GetOrderedCustomers(db));
 
             //Query 02. Export Cars from Make Toyota
+            Console.WriteLine(GetCarsFromMakeToyota(db));
 
             //Query 03. Export Local Suppliers
-            Console.WriteLine(GetLocalSuppliers(db));
+            //Console.WriteLine(GetLocalSuppliers(db));
         }
         //Query 03. Export Local Suppliers
         public static string GetLocalSuppliers(CarDealerContext context)
@@ -50,8 +51,21 @@ namespace CarDealer
         //Query 02. Export Cars from Make Toyota
         public static string GetCarsFromMakeToyota(CarDealerContext context)
         {
+            InitializeAutoMapper();
 
+            var toyotaCars = context.Cars
+                .Where(x => x.Make == "Toyota")
+                .OrderBy(x => x.Model)
+                .ThenByDescending(x => x.TravelledDistance)
+                .ToList();
+
+            var carsDto = mapper.Map<IEnumerable<CarOutputModel>>(toyotaCars);
+
+            var json = JsonConvert.SerializeObject(carsDto, Formatting.Indented);
+
+            return json;
         }
+
         //Query 01. Export Ordered Customers
         public static string GetOrderedCustomers(CarDealerContext context)
         {
