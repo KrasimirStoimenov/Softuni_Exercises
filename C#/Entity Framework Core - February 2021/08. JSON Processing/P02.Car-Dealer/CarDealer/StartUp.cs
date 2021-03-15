@@ -8,6 +8,7 @@ using CarDealer.DTO;
 using CarDealer.Models;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using Castle.Core.Resource;
 
 namespace CarDealer
 {
@@ -32,6 +33,22 @@ namespace CarDealer
             //Query 03. Import Cars
             var carsJson = File.ReadAllText("../../../Datasets/cars.json");
             ImportCars(db, carsJson);
+
+            //Query 04. Import Customers
+            var customersJson = File.ReadAllText("../../../Datasets/customers.json");
+            ImportCustomers(db, customersJson);
+        }
+        //Query 04. Import Customers
+        public static string ImportCustomers(CarDealerContext context, string inputJson)
+        {
+            InitializeAutoMapper();
+            var customersDto = JsonConvert.DeserializeObject<IEnumerable<CustomerInputModel>>(inputJson);
+            var customers = mapper.Map<IEnumerable<Customer>>(customersDto);
+
+            context.Customers.AddRange(customers);
+            context.SaveChanges();
+
+            return $"Successfully imported {customers.Count()}.";
         }
 
         //Query 03. Import Cars
