@@ -6,6 +6,7 @@ using AutoMapper;
 using CarDealer.Data;
 using CarDealer.DTO.OutputModels;
 using CarDealer.ImportExportData;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace CarDealer
@@ -22,7 +23,33 @@ namespace CarDealer
             //ImportDataQueries(db);
 
             //Query 01. Export Ordered Customers
-            Console.WriteLine(GetOrderedCustomers(db));
+            //Console.WriteLine(GetOrderedCustomers(db));
+
+            //Query 02. Export Cars from Make Toyota
+
+            //Query 03. Export Local Suppliers
+            Console.WriteLine(GetLocalSuppliers(db));
+        }
+        //Query 03. Export Local Suppliers
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            InitializeAutoMapper();
+
+            var suppliers = context.Suppliers
+                .Include(x => x.Parts)
+                .Where(x => x.IsImporter == false)
+                .ToList();
+
+            var suppliersDto = mapper.Map<IEnumerable<SupplierOutputModel>>(suppliers);
+
+            var json = JsonConvert.SerializeObject(suppliersDto, Formatting.Indented);
+
+            return json;
+        }
+
+        //Query 02. Export Cars from Make Toyota
+        public static string GetCarsFromMakeToyota(CarDealerContext context)
+        {
 
         }
         //Query 01. Export Ordered Customers
