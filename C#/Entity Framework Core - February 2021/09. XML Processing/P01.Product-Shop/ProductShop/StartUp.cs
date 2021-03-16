@@ -5,6 +5,7 @@ using ProductShop.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -24,10 +25,15 @@ namespace ProductShop
             //Query 1. Import Users
             var usersXml = File.ReadAllText("../../../Datasets/users.xml");
             Console.WriteLine(ImportUsers(db, usersXml));
-
+            
             //Query 2.Import Products
             var productsXml = File.ReadAllText("../../../Datasets/products.xml");
             Console.WriteLine(ImportProducts(db, productsXml));
+            
+            //Query 3. Import Categories
+            var categoriesXml = File.ReadAllText("../../../Datasets/categories.xml");
+            Console.WriteLine(ImportCategories(db, categoriesXml));
+
         }
         //Query 2. Import Products
         public static string ImportProducts(ProductShopContext context, string inputXml)
