@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using ProductShop.Data;
+using ProductShop.Dtos.Export;
 using ProductShop.Dtos.Import;
 using ProductShop.ImportExportDataQueries;
 using ProductShop.Models;
@@ -7,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -23,7 +26,31 @@ namespace ProductShop
             db.Database.EnsureCreated();
 
             ImportData(db);
+            //Query 5. Products In Range
+            Console.WriteLine(GetProductsInRange(db));
 
+        }
+        //Query 5. Products In Range
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            InitializeAutoMapper();
+
+            var products = context.Products
+                .Where(x => x.Price >= 500 && x.Price <= 1000)
+                .OrderBy(x => x.Price)
+                .Take(10)
+                .ProjectTo<ProductExportDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            var serializer = new XmlSerializer(typeof(ProductExportDto[]), new XmlRootAttribute("Products"));
+
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
+            {
+                serializer.Serialize(writer, products);
+            };
+
+            return sb.ToString().TrimEnd();
         }
 
         private static void ImportData(ProductShopContext db)
