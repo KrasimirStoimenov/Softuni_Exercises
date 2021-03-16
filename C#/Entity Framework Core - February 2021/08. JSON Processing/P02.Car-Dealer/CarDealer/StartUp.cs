@@ -18,23 +18,75 @@ namespace CarDealer
         public static void Main(string[] args)
         {
             var db = new CarDealerContext();
-            //db.Database.EnsureDeleted();
-            //db.Database.EnsureCreated();
-            //
-            //ImportDataQueries(db);
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+            
+            ImportDataQueries(db);
 
             //Query 01. Export Ordered Customers
-            //Console.WriteLine(GetOrderedCustomers(db));
+            Console.WriteLine(GetOrderedCustomers(db));
 
             //Query 02. Export Cars from Make Toyota
-            //Console.WriteLine(GetCarsFromMakeToyota(db));
+            Console.WriteLine(GetCarsFromMakeToyota(db));
 
             //Query 03. Export Local Suppliers
-            //Console.WriteLine(GetLocalSuppliers(db));
+            Console.WriteLine(GetLocalSuppliers(db));
 
             //Query 04. Export Cars with Their List of Parts
             Console.WriteLine(GetCarsWithTheirListOfParts(db));
+
+            //Query 05. Export Total Sales by Customer
+            Console.WriteLine(GetTotalSalesByCustomer(db));
+
+            //Query 06. Export Sales with Applied Discount
+            Console.WriteLine(GetSalesWithAppliedDiscount(db));
+
         }
+        //Query 06. Export Sales with Applied Discount
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            var sales = context.Sales
+                .Take(10)
+                .Select(x => new
+                {
+                    car = new
+                    {
+                        Make = x.Car.Make,
+                        Model = x.Car.Model,
+                        TravelledDistance = x.Car.TravelledDistance
+                    },
+                    customerName = x.Customer.Name,
+                    Discount = x.Discount.ToString("F2"),
+                    price = x.Car.PartCars.Select(p => p.Part.Price).Sum().ToString("F2"),
+                    priceWithDiscount = (x.Car.PartCars.Select(p => p.Part.Price).Sum() * (1 - (x.Discount * 0.01M))).ToString("F2")
+                })
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(sales, Formatting.Indented);
+
+            return json;
+        }
+
+        //Query 05. Export Total Sales by Customer
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            var customers = context.Customers
+                .Where(x => x.Sales.Count >= 1)
+                .Select(x => new
+                {
+                    fullName = x.Name,
+                    boughtCars = x.Sales.Count,
+                    spentMoney = x.Sales.Select(c => c.Car.PartCars.Select(p => p.Part.Price).Sum()).Sum()
+                })
+                .OrderByDescending(x => x.spentMoney)
+                .ThenByDescending(x => x.boughtCars)
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(customers, Formatting.Indented);
+
+            return json;
+        }
+
         //Query 04. Export Cars with Their List of Parts
         public static string GetCarsWithTheirListOfParts(CarDealerContext context)
         {
