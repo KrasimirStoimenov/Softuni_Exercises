@@ -34,7 +34,48 @@ namespace ProductShop
             var categoriesXml = File.ReadAllText("../../../Datasets/categories.xml");
             Console.WriteLine(ImportCategories(db, categoriesXml));
 
+            //Query 4. Import Categories and Products
+            var categoriesProductsXml = File.ReadAllText("../../../Datasets/categories-products.xml");
+            Console.WriteLine(ImportCategoryProducts(db, categoriesProductsXml));
         }
+        //Query 4. Import Categories and Products
+        public static string ImportCategoryProducts(ProductShopContext context, string inputXml)
+        {
+            InitializeAutoMapper();
+
+            var serializer = new XmlSerializer(typeof(CategoryProductDto[]), new XmlRootAttribute("CategoryProducts"));
+            var categoryProductsXml = (CategoryProductDto[])serializer.Deserialize(new StringReader(inputXml));
+
+            var categoryProducts = mapper.Map<CategoryProduct[]>(categoryProductsXml);
+
+            var categoryIds = context.Categories.Select(x => x.Id);
+            var productIds = context.Products.Select(x => x.Id);
+
+            var filteredCategoryProducts = categoryProducts
+                .Where(x => categoryIds.Contains(x.CategoryId) && productIds.Contains(x.ProductId))
+                .ToArray();
+
+            context.CategoryProducts.AddRange(filteredCategoryProducts);
+            context.SaveChanges();
+
+            return $"Successfully imported {filteredCategoryProducts.Length}";
+        }
+
+        //Query 3. Import Categories
+        public static string ImportCategories(ProductShopContext context, string inputXml)
+        {
+            InitializeAutoMapper();
+
+            var serializer = new XmlSerializer(typeof(CategoryDto[]), new XmlRootAttribute("Categories"));
+            var categoriesXml = (CategoryDto[])serializer.Deserialize(new StringReader(inputXml));
+
+            var categories = mapper.Map<Category[]>(categoriesXml);
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+
+            return $"Successfully imported {categories.Length}";
+        }
+
         //Query 2. Import Products
         public static string ImportProducts(ProductShopContext context, string inputXml)
         {
