@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProductShop
 {
@@ -23,6 +24,24 @@ namespace ProductShop
             //Query 1. Import Users
             var usersXml = File.ReadAllText("../../../Datasets/users.xml");
             Console.WriteLine(ImportUsers(db, usersXml));
+
+            //Query 2.Import Products
+            var productsXml = File.ReadAllText("../../../Datasets/products.xml");
+            Console.WriteLine(ImportProducts(db, productsXml));
+        }
+        //Query 2. Import Products
+        public static string ImportProducts(ProductShopContext context, string inputXml)
+        {
+            InitializeAutoMapper();
+
+            var serializer = new XmlSerializer(typeof(ProductDto[]), new XmlRootAttribute("Products"));
+            var productsXml = (ProductDto[])serializer.Deserialize(new StringReader(inputXml));
+
+            var products = mapper.Map<Product[]>(productsXml);
+            context.Products.AddRange(products);
+            context.SaveChanges();
+
+            return $"Successfully imported {products.Length}";
         }
         //Query 1. Import Users
         public static string ImportUsers(ProductShopContext context, string inputXml)
