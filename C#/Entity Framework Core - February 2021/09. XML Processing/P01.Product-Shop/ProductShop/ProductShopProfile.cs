@@ -14,7 +14,7 @@ namespace ProductShop
             CreateMap<CategoryDto, Category>();
             CreateMap<CategoryProductDto, CategoryProduct>();
 
-            CreateMap<Product, ProductExportDto>()
+            CreateMap<Product, ExportProductDto>()
                 .ForMember(x => x.BuyerName, y => y.MapFrom(b => b.Buyer.FirstName + " " + b.Buyer.LastName));
         }
     }

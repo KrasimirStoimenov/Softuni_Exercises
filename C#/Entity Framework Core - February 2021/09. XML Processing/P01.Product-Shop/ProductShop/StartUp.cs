@@ -24,8 +24,9 @@ namespace ProductShop
             var db = new ProductShopContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
-
+            
             ImportData(db);
+
             //Query 5. Products In Range
             Console.WriteLine(GetProductsInRange(db));
 
@@ -39,15 +40,18 @@ namespace ProductShop
                 .Where(x => x.Price >= 500 && x.Price <= 1000)
                 .OrderBy(x => x.Price)
                 .Take(10)
-                .ProjectTo<ProductExportDto>(mapper.ConfigurationProvider)
+                .ProjectTo<ExportProductDto>(mapper.ConfigurationProvider)
                 .ToArray();
 
-            var serializer = new XmlSerializer(typeof(ProductExportDto[]), new XmlRootAttribute("Products"));
+            var serializer = new XmlSerializer(typeof(ExportProductDto[]), new XmlRootAttribute("Products"));
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
 
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
-                serializer.Serialize(writer, products);
+                serializer.Serialize(writer, products,namespaces);
             };
 
             return sb.ToString().TrimEnd();
