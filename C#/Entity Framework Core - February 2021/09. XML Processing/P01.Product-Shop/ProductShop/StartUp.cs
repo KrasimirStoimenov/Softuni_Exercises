@@ -2,17 +2,12 @@
 using AutoMapper.QueryableExtensions;
 using ProductShop.Data;
 using ProductShop.Dtos.Export;
-using ProductShop.Dtos.Import;
 using ProductShop.ImportExportDataQueries;
-using ProductShop.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
 using System.Xml.Serialization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProductShop
 {
@@ -22,15 +17,50 @@ namespace ProductShop
         public static void Main(string[] args)
         {
             var db = new ProductShopContext();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-            
-            ImportData(db);
+            //db.Database.EnsureDeleted();
+            //db.Database.EnsureCreated();
+            //
+            //ImportData(db);
+            //
+            ////Query 5. Products In Range
+            //Console.WriteLine(GetProductsInRange(db));
 
-            //Query 5. Products In Range
-            Console.WriteLine(GetProductsInRange(db));
+            //Query 6. Sold Products
+            Console.WriteLine(GetSoldProducts(db));
 
         }
+        //Query 6. Sold Products
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Where(x => x.ProductsSold.Count >= 1)
+                .Select(x => new ExportUserDto
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    SoldProducts = x.ProductsSold.Select(p => new UsersProductSoldDto
+                    {
+                        Name = p.Name,
+                        Price = p.Price
+                    })
+                    .ToArray()
+                })
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName)
+                .Take(5)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var xmlSerializer = new XmlSerializer(typeof(ExportUserDto[]), new XmlRootAttribute("Users"));
+            xmlSerializer.Serialize(new StringWriter(sb), users,namespaces);
+
+            return sb.ToString().TrimEnd();
+        }
+
         //Query 5. Products In Range
         public static string GetProductsInRange(ProductShopContext context)
         {
@@ -51,7 +81,7 @@ namespace ProductShop
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
-                serializer.Serialize(writer, products,namespaces);
+                serializer.Serialize(writer, products, namespaces);
             };
 
             return sb.ToString().TrimEnd();
