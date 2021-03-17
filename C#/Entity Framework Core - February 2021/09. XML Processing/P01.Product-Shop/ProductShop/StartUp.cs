@@ -25,10 +25,39 @@ namespace ProductShop
             ////Query 5. Products In Range
             //Console.WriteLine(GetProductsInRange(db));
 
-            //Query 6. Sold Products
-            Console.WriteLine(GetSoldProducts(db));
+            ////Query 6. Sold Products
+            //Console.WriteLine(GetSoldProducts(db));
+
+            //Query 7. Categories By Products Count
+            Console.WriteLine(GetCategoriesByProductsCount(db));
 
         }
+        //Query 7. Categories By Products Count
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var categories = context.Categories
+                .Select(x => new ExportCategoryDto
+                {
+                    Name = x.Name,
+                    Count = x.CategoryProducts.Count,
+                    AveragePrice = x.CategoryProducts.Average(p => p.Product.Price),
+                    TotalRevenue = x.CategoryProducts.Select(p => p.Product.Price).Sum()
+                })
+                .OrderByDescending(x => x.Count)
+                .ThenBy(x=>x.TotalRevenue)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var xmlSerializer = new XmlSerializer(typeof(ExportCategoryDto[]), new XmlRootAttribute("Categories"));
+            xmlSerializer.Serialize(new StringWriter(sb), categories, namespaces);
+
+            return sb.ToString().TrimEnd();
+        }
+
         //Query 6. Sold Products
         public static string GetSoldProducts(ProductShopContext context)
         {
@@ -56,7 +85,7 @@ namespace ProductShop
             namespaces.Add(string.Empty, string.Empty);
 
             var xmlSerializer = new XmlSerializer(typeof(ExportUserDto[]), new XmlRootAttribute("Users"));
-            xmlSerializer.Serialize(new StringWriter(sb), users,namespaces);
+            xmlSerializer.Serialize(new StringWriter(sb), users, namespaces);
 
             return sb.ToString().TrimEnd();
         }
