@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using ProductShop.Data;
 using ProductShop.Dtos.Export;
 using ProductShop.ImportExportDataQueries;
+using ProductShop.Models;
 using System;
 using System.IO;
 using System.Linq;
@@ -17,20 +19,68 @@ namespace ProductShop
         public static void Main(string[] args)
         {
             var db = new ProductShopContext();
-            //db.Database.EnsureDeleted();
-            //db.Database.EnsureCreated();
-            //
-            //ImportData(db);
-            //
-            ////Query 5. Products In Range
-            //Console.WriteLine(GetProductsInRange(db));
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
 
-            ////Query 6. Sold Products
-            //Console.WriteLine(GetSoldProducts(db));
+            ImportData(db);
+
+            //Query 5. Products In Range
+            Console.WriteLine(GetProductsInRange(db));
+
+            //Query 6. Sold Products
+            Console.WriteLine(GetSoldProducts(db));
 
             //Query 7. Categories By Products Count
             Console.WriteLine(GetCategoriesByProductsCount(db));
 
+            //Query 8. Users and Products
+            Console.WriteLine(GetUsersWithProducts(db));
+
+        }
+        //Query 8. Users and Products
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Include(x => x.ProductsSold)
+                .Where(u => u.ProductsSold.Count >= 1)
+                .ToArray()
+                .Select(x => new Q8UsersDto
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Age = x.Age,
+                    ProductsSoldByUser = new Q8ProductsSoldByUser
+                    {
+                        Count = x.ProductsSold.Count,
+                        Products = x.ProductsSold.Select(p => new Q8ProductsDto
+                        {
+                            Name = p.Name,
+                            Price = p.Price
+                        })
+                        .OrderByDescending(p => p.Price)
+                        .ToArray()
+                    }
+                })
+                .OrderByDescending(x => x.ProductsSoldByUser.Count)
+                .Take(10)
+                .ToArray();
+
+            var usersProducts = new Q8UsersProductsDto
+            {
+                Users = users,
+                Count = context.Users.Where(x=>x.ProductsSold.Count>=1).Count()
+            };
+
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var xmlSerializer = new XmlSerializer(typeof(Q8UsersProductsDto), new XmlRootAttribute("Users"));
+            xmlSerializer.Serialize(new StringWriter(sb), usersProducts, namespaces);
+
+            return sb.ToString().TrimEnd();
         }
         //Query 7. Categories By Products Count
         public static string GetCategoriesByProductsCount(ProductShopContext context)
@@ -44,7 +94,7 @@ namespace ProductShop
                     TotalRevenue = x.CategoryProducts.Select(p => p.Product.Price).Sum()
                 })
                 .OrderByDescending(x => x.Count)
-                .ThenBy(x=>x.TotalRevenue)
+                .ThenBy(x => x.TotalRevenue)
                 .ToArray();
 
             var sb = new StringBuilder();
