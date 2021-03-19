@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarDealer.DtoModels.InputModels;
+using CarDealer.DtoModels.OutputModels;
 using CarDealer.Models;
 
 namespace CarDealer
@@ -11,6 +12,8 @@ namespace CarDealer
             CreateMap<InputSuppliersDto, Supplier>();
             CreateMap<InputPartsDto, Part>();
             CreateMap<InputCustomersDto, Customer>();
+
+            CreateMap<Car, ExportCarDto>();
         }
     }
 }

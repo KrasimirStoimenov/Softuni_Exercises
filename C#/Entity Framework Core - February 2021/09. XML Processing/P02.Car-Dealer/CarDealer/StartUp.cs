@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CarDealer.Data;
 using CarDealer.DtoModels.InputModels;
+using CarDealer.DtoModels.OutputModels;
 using CarDealer.ImportExportDataQueries;
 using CarDealer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -18,12 +21,37 @@ namespace CarDealer
         public static void Main(string[] args)
         {
             var db = new CarDealerContext();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
+            //db.Database.EnsureDeleted();
+            //db.Database.EnsureCreated();
+            //
+            //ImportData(db);
 
-            ImportData(db);
+            //Query 06. Cars With Distance
+            Console.WriteLine(GetCarsWithDistance(db));
+        }
 
+        //Query 06. Cars With Distance
+        public static string GetCarsWithDistance(CarDealerContext context)
+        {
+            InitializeAutoMapper();
 
+            var cars = context.Cars
+                .Where(x => x.TravelledDistance > 2000000)
+                .OrderBy(x => x.Make)
+                .ThenBy(x => x.Model)
+                .Take(10)
+                .ProjectTo<ExportCarDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            var sb = new StringBuilder();
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var serializer = new XmlSerializer(typeof(ExportCarDto[]), new XmlRootAttribute("cars"));
+
+            serializer.Serialize(new StringWriter(sb), cars, namespaces);
+
+            return sb.ToString().TrimEnd();
         }
 
         private static void ImportData(CarDealerContext db)
