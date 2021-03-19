@@ -19,15 +19,15 @@ namespace CarDealer
             var db = new CarDealerContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
-            
+
             //Query 01.Import Suppliers
             var suppliersXml = File.ReadAllText("../../../Datasets/suppliers.xml");
             Console.WriteLine(ImportSuppliers(db, suppliersXml));
-            
+
             //Query 02. Import Parts
             var partsXml = File.ReadAllText("../../../Datasets/parts.xml");
             Console.WriteLine(ImportParts(db, partsXml));
-            
+
             //Query 03. Import Cars
             var carsXml = File.ReadAllText("../../../Datasets/cars.xml");
             Console.WriteLine(ImportCars(db, carsXml));
@@ -35,7 +35,44 @@ namespace CarDealer
             //Query 04. Import Customers
             var customersXml = File.ReadAllText("../../../Datasets/customers.xml");
             Console.WriteLine(ImportCustomers(db, customersXml));
+
+            //Query 05. Import Sales
+            var salesXml = File.ReadAllText("../../../Datasets/sales.xml");
+            Console.WriteLine(ImportSales(db, salesXml));
         }
+        //Query 05. Import Sales
+        public static string ImportSales(CarDealerContext context, string inputXml)
+        {
+            var serializer = new XmlSerializer(typeof(InputSalesDto[]), new XmlRootAttribute("Sales"));
+
+            var salesXml = serializer.Deserialize(new StringReader(inputXml)) as InputSalesDto[];
+
+            List<Sale> sales = new List<Sale>();
+
+            foreach (var saleXml in salesXml)
+            {
+                var car = context.Cars.FirstOrDefault(x => x.Id == saleXml.CarId);
+                if (car == null)
+                {
+                    continue;
+                }
+
+                Sale sale = new Sale()
+                {
+                    CarId = car.Id,
+                    CustomerId = saleXml.CustomerId,
+                    Discount = saleXml.Discount
+                };
+
+                sales.Add(sale);
+            }
+
+            context.Sales.AddRange(sales);
+            context.SaveChanges();
+
+            return $"Successfully imported {sales.Count}";
+        }
+
         //Query 04. Import Customers
         public static string ImportCustomers(CarDealerContext context, string inputXml)
         {
@@ -98,6 +135,7 @@ namespace CarDealer
             return $"Successfully imported {cars.Count}";
 
         }
+
         //Query 02. Import Parts
         public static string ImportParts(CarDealerContext context, string inputXml)
         {
