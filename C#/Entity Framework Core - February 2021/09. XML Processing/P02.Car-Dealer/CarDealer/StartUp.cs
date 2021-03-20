@@ -35,6 +35,42 @@ namespace CarDealer
             ////Query 08. Local Suppliers
             //Console.WriteLine(GetLocalSuppliers(db));
 
+            //Query 09. Cars with Their List of Parts
+            Console.WriteLine(GetCarsWithTheirListOfParts(db));
+
+        }
+        //Query 09. Cars with Their List of Parts
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            var cars = context.Cars
+                .Select(c => new ExportCarWithPartsDto
+                {
+                    Make = c.Make,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance,
+                    Parts = c.PartCars.Select(p => new ExportPartsDto
+                    {
+                        Name = p.Part.Name,
+                        Price = p.Part.Price
+                    })
+                    .OrderByDescending(p => p.Price)
+                    .ToArray()
+                })
+                .OrderByDescending(c => c.TravelledDistance)
+                .ThenBy(c => c.Model)
+                .Take(5)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var serializer = new XmlSerializer(typeof(ExportCarWithPartsDto[]), new XmlRootAttribute("cars"));
+            serializer.Serialize(new StringWriter(sb), cars, namespaces);
+
+            return sb.ToString().TrimEnd();
+        }
         //Query 08. Local Suppliers
         public static string GetLocalSuppliers(CarDealerContext context)
         {
