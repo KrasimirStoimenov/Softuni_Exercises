@@ -25,14 +25,36 @@ namespace CarDealer
             //db.Database.EnsureCreated();
             //
             //ImportData(db);
-
-            //Query 06. Cars With Distance
+            //
+            ////Query 06. Cars With Distance
             //Console.WriteLine(GetCarsWithDistance(db));
+            //
+            ////Query 07. Cars from make BMW
+            //Console.WriteLine(GetCarsFromMakeBmw(db));
 
-            //Query 07. Cars from make BMW
-            Console.WriteLine(GetCarsFromMakeBmw(db));
+            ////Query 08. Local Suppliers
+            //Console.WriteLine(GetLocalSuppliers(db));
 
+        //Query 08. Local Suppliers
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            InitializeAutoMapper();
+
+            var suppliers = context.Suppliers
+                .Where(x => x.IsImporter == false)
+                .ProjectTo<ExportSuppliersDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            var sb = new StringBuilder();
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var serializer = new XmlSerializer(typeof(ExportSuppliersDto[]), new XmlRootAttribute("suppliers"));
+            serializer.Serialize(new StringWriter(sb), suppliers, namespaces);
+
+            return sb.ToString().TrimEnd();
         }
+
         //Query 07. Cars from make BMW
         public static string GetCarsFromMakeBmw(CarDealerContext context)
         {
