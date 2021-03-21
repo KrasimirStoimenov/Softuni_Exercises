@@ -42,6 +42,38 @@ namespace CarDealer
             //Query 10. Total Sales by Customer
             Console.WriteLine(GetTotalSalesByCustomer(db));
 
+            //Query 11. Sales with Applied Discount
+            Console.WriteLine(GetSalesWithAppliedDiscount(db));
+        }
+        //Query 11. Sales with Applied Discount
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            var sales = context.Sales
+                .Select(x => new ExportSaleDto
+                {
+                    SoldCars =new ExportSoldCarsDto
+                    {
+                        Make = x.Car.Make,
+                        Model = x.Car.Model,
+                        TravelledDistance = x.Car.TravelledDistance,
+                    },
+                    Discount = x.Discount,
+                    CustomerName = x.Customer.Name,
+                    Price = x.Car.PartCars.Sum(p => p.Part.Price),
+                    PriceWithDiscount = x.Car.PartCars.Sum(p => p.Part.Price) 
+                                     - (x.Car.PartCars.Sum(p => p.Part.Price) * x.Discount / 100)
+                })
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var serializer = new XmlSerializer(typeof(ExportSaleDto[]), new XmlRootAttribute("sales"));
+            serializer.Serialize(new StringWriter(sb), sales, namespaces);
+
+            return sb.ToString().Trim();
         }
 
         //Query 10. Total Sales by Customer
