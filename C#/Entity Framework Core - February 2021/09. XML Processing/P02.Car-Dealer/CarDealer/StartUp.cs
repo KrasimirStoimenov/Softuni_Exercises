@@ -5,6 +5,7 @@ using CarDealer.DtoModels.InputModels;
 using CarDealer.DtoModels.OutputModels;
 using CarDealer.ImportExportDataQueries;
 using CarDealer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,24 +22,53 @@ namespace CarDealer
         public static void Main(string[] args)
         {
             var db = new CarDealerContext();
-            //db.Database.EnsureDeleted();
-            //db.Database.EnsureCreated();
-            //
-            //ImportData(db);
-            //
-            ////Query 06. Cars With Distance
-            //Console.WriteLine(GetCarsWithDistance(db));
-            //
-            ////Query 07. Cars from make BMW
-            //Console.WriteLine(GetCarsFromMakeBmw(db));
-
-            ////Query 08. Local Suppliers
-            //Console.WriteLine(GetLocalSuppliers(db));
-
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+            
+            ImportData(db);
+            
+            //Query 06. Cars With Distance
+            Console.WriteLine(GetCarsWithDistance(db));
+            
+            //Query 07. Cars from make BMW
+            Console.WriteLine(GetCarsFromMakeBmw(db));
+            
+            //Query 08. Local Suppliers
+            Console.WriteLine(GetLocalSuppliers(db));
+            
             //Query 09. Cars with Their List of Parts
             Console.WriteLine(GetCarsWithTheirListOfParts(db));
+            
+            //Query 10. Total Sales by Customer
+            Console.WriteLine(GetTotalSalesByCustomer(db));
 
         }
+
+        //Query 10. Total Sales by Customer
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            var customers = context.Customers
+                .Where(c => c.Sales.Count >= 1)
+                .Select(c => new ExportCustomersDto
+                {
+                    FullName = c.Name,
+                    BoughtCars = c.Sales.Count,
+                    SpendMoney = c.Sales.SelectMany(s => s.Car.PartCars).Sum(x => x.Part.Price)
+                })
+                .OrderByDescending(m => m.SpendMoney)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add(string.Empty, string.Empty);
+
+            var serializer = new XmlSerializer(typeof(ExportCustomersDto[]), new XmlRootAttribute("customers"));
+            serializer.Serialize(new StringWriter(sb), customers, namespaces);
+
+            return sb.ToString().TrimEnd();
+        }
+
         //Query 09. Cars with Their List of Parts
         public static string GetCarsWithTheirListOfParts(CarDealerContext context)
         {
@@ -71,6 +101,7 @@ namespace CarDealer
 
             return sb.ToString().TrimEnd();
         }
+
         //Query 08. Local Suppliers
         public static string GetLocalSuppliers(CarDealerContext context)
         {
