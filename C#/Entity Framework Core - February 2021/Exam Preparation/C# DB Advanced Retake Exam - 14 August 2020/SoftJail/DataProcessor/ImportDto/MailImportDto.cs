@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SoftJail.Data.Models
+namespace SoftJail.DataProcessor.ImportDto
 {
-    public class Mail
+    public class MailImportDto
     {
-        public int Id { get; set; }
-
         [Required]
         public string Description { get; set; }
 
@@ -15,9 +13,5 @@ namespace SoftJail.Data.Models
         [Required]
         [RegularExpression(@"[A-Za-z0-9 ]* str.")]
         public string Address { get; set; }
-
-        public int PrisonerId { get; set; }
-        public Prisoner Prisoner { get; set; }
-
     }
 }
