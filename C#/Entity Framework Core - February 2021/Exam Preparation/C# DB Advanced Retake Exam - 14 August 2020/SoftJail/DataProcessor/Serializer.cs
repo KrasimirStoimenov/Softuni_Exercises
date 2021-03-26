@@ -14,6 +14,7 @@
         {
             var prisoners = context.Prisoners
                 .Where(p => ids.Contains(p.Id))
+                .Include(x=>x.Cell)
                 .Include(x=>x.PrisonerOfficers)
                 .ThenInclude(c=>c.Officer)
                 .ToArray()
