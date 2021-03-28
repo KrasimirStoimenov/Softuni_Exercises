@@ -13,11 +13,9 @@ namespace SoftJail.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(30)]
+
         public string FullName { get; set; }
 
-        [Range(0, double.MaxValue)]
         public decimal Salary { get; set; }
 
         [Required]

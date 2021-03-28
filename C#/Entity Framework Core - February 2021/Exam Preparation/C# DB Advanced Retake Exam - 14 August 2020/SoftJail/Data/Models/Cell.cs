@@ -11,7 +11,6 @@ namespace SoftJail.Data.Models
         }
         public int Id { get; set; }
 
-        [Range(1, 1000)]
         public int CellNumber { get; set; }
 
         public bool HasWindow { get; set; }
