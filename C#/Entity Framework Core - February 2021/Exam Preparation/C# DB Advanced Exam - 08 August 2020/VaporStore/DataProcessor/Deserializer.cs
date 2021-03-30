@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Xml.Serialization;
     using Data;
     using Newtonsoft.Json;
     using VaporStore.Data.Models;
@@ -100,8 +102,44 @@
 
         public static string ImportPurchases(VaporStoreDbContext context, string xmlString)
         {
-            return "TODO";
+            var sb = new StringBuilder();
 
+            var xmlSerializer = new XmlSerializer(typeof(PurchaseInputModel[]), new XmlRootAttribute("Purchases"));
+
+            var purchasesXml = xmlSerializer.Deserialize(new StringReader(xmlString)) as PurchaseInputModel[];
+
+            foreach (var purchaseXml in purchasesXml)
+            {
+                if (!IsValid(purchaseXml))
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                var validDate = DateTime.TryParseExact(purchaseXml.Date, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate);
+
+                if (!validDate)
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                var purchase = new Purchase()
+                {
+                    Game = context.Games.FirstOrDefault(g => g.Name == purchaseXml.GameName),
+                    Type = purchaseXml.Type.Value,
+                    Date = parsedDate,
+                    ProductKey = purchaseXml.Key,
+                    Card = context.Cards.FirstOrDefault(x => x.Number == purchaseXml.CardNumber)
+                };
+
+                context.Purchases.Add(purchase);
+                context.SaveChanges();
+
+                sb.AppendLine($"Imported {purchase.Game.Name} for {purchase.Card.User.Username}");
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         private static bool IsValid(object dto)
