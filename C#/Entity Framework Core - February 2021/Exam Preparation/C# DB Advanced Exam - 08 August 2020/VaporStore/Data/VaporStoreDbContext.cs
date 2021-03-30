@@ -1,18 +1,18 @@
 ﻿namespace VaporStore.Data
 {
-	using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
     using VaporStore.Data.Models;
 
     public class VaporStoreDbContext : DbContext
-	{
-		public VaporStoreDbContext()
-		{
-		}
+    {
+        public VaporStoreDbContext()
+        {
+        }
 
-		public VaporStoreDbContext(DbContextOptions options)
-			: base(options)
-		{
-		}
+        public VaporStoreDbContext(DbContextOptions options)
+            : base(options)
+        {
+        }
 
         public DbSet<Card> Cards { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
@@ -23,17 +23,20 @@
         public DbSet<Developer> Developers { get; set; }
         public DbSet<Genre> Genres { get; set; }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder options)
-		{
-			if (!options.IsConfigured)
-			{
-				options
-					.UseSqlServer(Configuration.ConnectionString);
-			}
-		}
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            if (!options.IsConfigured)
+            {
+                options
+                    .UseSqlServer(Configuration.ConnectionString);
+            }
+        }
 
-		protected override void OnModelCreating(ModelBuilder model)
-		{
-		}
-	}
+        protected override void OnModelCreating(ModelBuilder model)
+        {
+            model.Entity<GameTag>()
+                .HasKey(x => new { x.GameId, x.TagId });
+
+        }
+    }
 }

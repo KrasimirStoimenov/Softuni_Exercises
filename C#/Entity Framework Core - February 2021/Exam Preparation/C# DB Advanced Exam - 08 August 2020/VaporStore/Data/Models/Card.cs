@@ -7,6 +7,10 @@ namespace VaporStore.Data.Models
 {
     public class Card
     {
+        public Card()
+        {
+            this.Purchases = new HashSet<Purchase>();
+        }
         public int Id { get; set; }
 
         [Required]
