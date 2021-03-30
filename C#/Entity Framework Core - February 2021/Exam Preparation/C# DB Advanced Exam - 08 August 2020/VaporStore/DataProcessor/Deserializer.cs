@@ -62,7 +62,40 @@
 
         public static string ImportUsers(VaporStoreDbContext context, string jsonString)
         {
-            return "TODO";
+            var sb = new StringBuilder();
+
+            var usersJson = JsonConvert.DeserializeObject<IEnumerable<UserInputModel>>(jsonString);
+
+            foreach (var userJson in usersJson)
+            {
+                if (!IsValid(userJson) || !userJson.Cards.All(IsValid))
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                var user = new User
+                {
+                    FullName = userJson.FullName,
+                    Username = userJson.Username,
+                    Age = userJson.Age,
+                    Email = userJson.Email,
+                    Cards = userJson.Cards.Select(x => new Card
+                    {
+                        Cvc = x.CVC,
+                        Number = x.Number,
+                        Type = x.Type.Value
+                    })
+                    .ToList()
+                };
+
+                context.Users.Add(user);
+                context.SaveChanges();
+
+                sb.AppendLine($"Imported {user.Username} with {user.Cards.Count} cards");
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         public static string ImportPurchases(VaporStoreDbContext context, string xmlString)
