@@ -1,9 +1,14 @@
 ﻿namespace VaporStore.DataProcessor
 {
     using System;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Xml.Serialization;
     using Data;
     using Newtonsoft.Json;
+    using VaporStore.DataProcessor.Dto.Export;
 
     public static class Serializer
     {
@@ -40,7 +45,45 @@
 
         public static string ExportUserPurchasesByType(VaporStoreDbContext context, string storeType)
         {
-            throw new NotImplementedException();
+
+            var users = context.Users
+                .ToList()
+                .Where(x => x.Cards.Any(c => c.Purchases.Any(t => t.Type.ToString() == storeType)))
+                .Select(u => new UserExportModel
+                {
+                    Username = u.Username,
+                    Purchases = u.Cards.SelectMany(p => p.Purchases)
+                                       .Where(p => p.Type.ToString() == storeType)
+                                       .Select(p => new PurchaseExportModel
+                                       {
+                                           CardNumber = p.Card.Number,
+                                           Cvc = p.Card.Cvc,
+                                           Date = p.Date.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
+                                           Game = new GameExportModel
+                                           {
+                                               GameName = p.Game.Name,
+                                               Genre = p.Game.Genre.Name,
+                                               Price = p.Game.Price
+                                           }
+                                       })
+                                       .OrderBy(x => x.Date)
+                                       .ToArray(),
+                    TotalSpent = u.Cards.Sum(c => c.Purchases.Where(p => p.Type.ToString() == storeType).Sum(g => g.Game.Price))
+
+                })
+                .OrderByDescending(x => x.TotalSpent)
+                .ThenBy(x => x.Username)
+                .ToArray();
+
+            var serializer = new XmlSerializer(typeof(UserExportModel[]), new XmlRootAttribute("Users"));
+
+            var ns = new XmlSerializerNamespaces();
+            ns.Add(string.Empty, string.Empty);
+
+            var sb = new StringBuilder();
+            serializer.Serialize(new StringWriter(sb), users, ns);
+
+            return sb.ToString().TrimEnd();
         }
     }
 }
