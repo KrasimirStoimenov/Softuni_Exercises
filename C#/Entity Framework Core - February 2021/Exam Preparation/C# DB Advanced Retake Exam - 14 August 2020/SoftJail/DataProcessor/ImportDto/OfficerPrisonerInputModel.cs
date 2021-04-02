@@ -3,9 +3,9 @@
 namespace SoftJail.DataProcessor.ImportDto
 {
     [XmlType("Prisoner")]
-    public class OfficerPrisonerDto
+    public class OfficerPrisonerInputModel
     {
-        [XmlAttribute("Id")]
-        public int PrisonerId { get; set; }
+        [XmlAttribute("id")]
+        public int Id { get; set; }
     }
 }

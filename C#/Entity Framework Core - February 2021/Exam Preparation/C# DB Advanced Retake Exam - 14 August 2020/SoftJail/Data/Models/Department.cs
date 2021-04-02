@@ -9,11 +9,12 @@ namespace SoftJail.Data.Models
         {
             this.Cells = new HashSet<Cell>();
         }
+
         public int Id { get; set; }
 
         [Required]
-
         public string Name { get; set; }
+
         public ICollection<Cell> Cells { get; set; }
     }
 }

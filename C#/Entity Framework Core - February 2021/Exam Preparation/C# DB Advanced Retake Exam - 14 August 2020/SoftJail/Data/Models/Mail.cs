@@ -17,6 +17,5 @@ namespace SoftJail.Data.Models
 
         public int PrisonerId { get; set; }
         public Prisoner Prisoner { get; set; }
-
     }
 }

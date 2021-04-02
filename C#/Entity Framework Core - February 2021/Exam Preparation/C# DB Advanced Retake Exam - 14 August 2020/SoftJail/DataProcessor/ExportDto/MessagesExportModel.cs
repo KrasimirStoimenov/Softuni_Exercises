@@ -3,9 +3,8 @@
 namespace SoftJail.DataProcessor.ExportDto
 {
     [XmlType("Message")]
-    public class ExportMailsDto
+    public class MessagesExportModel
     {
-        [XmlElement("Description")]
         public string Description { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace SoftJail.Data.Models
+﻿namespace SoftJail.Data.Models
 {
     public class OfficerPrisoner
     {

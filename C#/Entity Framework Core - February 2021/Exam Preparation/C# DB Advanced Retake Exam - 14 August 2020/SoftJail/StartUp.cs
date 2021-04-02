@@ -5,6 +5,7 @@
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using System.IO;
+    using SoftJail.Data.Models;
 
     public class StartUp
     {
@@ -16,11 +17,19 @@
 
             ResetDatabase(context, shouldDropDatabase: true);
 
+            var department = new Department
+            {
+                Name = "67890-98765789"
+            };
+
+            context.Departments.Add(department);
+            context.SaveChanges();
+
             var projectDir = GetProjectDirectory();
-            
+
             ImportEntities(context, projectDir + @"Datasets/", projectDir + @"ImportResults/");
             ExportEntities(context, projectDir + @"ExportResults/");
-            
+
             using (var transaction = context.Database.BeginTransaction())
             {
                 transaction.Rollback();

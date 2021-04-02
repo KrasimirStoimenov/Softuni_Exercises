@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SoftJail.Data.Models
 {
@@ -9,6 +8,7 @@ namespace SoftJail.Data.Models
         {
             this.Prisoners = new HashSet<Prisoner>();
         }
+
         public int Id { get; set; }
 
         public int CellNumber { get; set; }
@@ -19,5 +19,6 @@ namespace SoftJail.Data.Models
         public Department Department { get; set; }
 
         public ICollection<Prisoner> Prisoners { get; set; }
+
     }
 }
