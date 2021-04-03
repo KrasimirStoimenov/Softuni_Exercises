@@ -68,7 +68,64 @@
 
         public static string ImportAuthors(BookShopContext context, string jsonString)
         {
-            throw new NotImplementedException();
+            var sb = new StringBuilder();
+
+            var authors = JsonConvert.DeserializeObject<IEnumerable<AuthorInputModel>>(jsonString);
+
+            var validAuthors = new List<Author>();
+            foreach (var author in authors)
+            {
+                if (!IsValid(author))
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                if (validAuthors.Any(x => x.Email == author.Email))
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                var validAuthor = new Author
+                {
+                    FirstName = author.FirstName,
+                    Email = author.Email,
+                    LastName = author.LastName,
+                    Phone = author.Phone,
+                };
+
+                foreach (var book in author.Books)
+                {
+                    if (!IsValid(book))
+                    {
+                        continue;
+                    }
+                    var validBook = context.Books.FirstOrDefault(x => x.Id == book.Id.Value);
+                    if (validBook == null)
+                    {
+                        continue;
+                    }
+
+                    validAuthor.AuthorsBooks.Add(new AuthorBook() { Book = validBook });
+                }
+
+                if (validAuthor.AuthorsBooks.Count == 0)
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                validAuthors.Add(validAuthor);
+                var authorSuccessfullMessage = string.Format(SuccessfullyImportedAuthor, validAuthor.FirstName + " " + validAuthor.LastName, validAuthor.AuthorsBooks.Count);
+
+                sb.AppendLine(authorSuccessfullMessage);
+            }
+
+            context.Authors.AddRange(validAuthors);
+            context.SaveChanges();
+
+            return sb.ToString().TrimEnd();
         }
 
         private static bool IsValid(object dto)
