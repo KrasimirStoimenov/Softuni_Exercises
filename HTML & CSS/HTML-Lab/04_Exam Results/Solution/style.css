@@ -2,6 +2,7 @@ td{
     border: 1px solid black;
 }
 
-thead td{
-    text-align: center;
+th{
+    border: 1px solid black;
 }
+
