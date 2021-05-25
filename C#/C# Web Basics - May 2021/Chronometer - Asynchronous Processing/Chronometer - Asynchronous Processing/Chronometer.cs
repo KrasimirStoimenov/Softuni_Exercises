@@ -1,32 +1,40 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Chronometer___Asynchronous_Processing.Contracts;
 
 namespace Chronometer___Asynchronous_Processing
 {
     public class Chronometer : IChronometer
     {
-        public string GetTime => throw new System.NotImplementedException();
+        private readonly Stopwatch sw;
+
+        public Chronometer()
+        {
+            this.sw = new Stopwatch();
+        }
+
+        public string GetTime => this.sw.Elapsed.ToString();
 
         public List<string> Laps => throw new System.NotImplementedException();
 
         public string Lap()
         {
-            throw new System.NotImplementedException();
+            return "some lap";
         }
 
         public void Reset()
         {
-            throw new System.NotImplementedException();
+            this.sw.Reset();
         }
 
         public void Start()
         {
-            throw new System.NotImplementedException();
+            this.sw.Start();
         }
 
         public void Stop()
         {
-            throw new System.NotImplementedException();
+            this.sw.Stop();
         }
     }
 }
