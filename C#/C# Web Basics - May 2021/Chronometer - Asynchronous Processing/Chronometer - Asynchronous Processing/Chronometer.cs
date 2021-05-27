@@ -11,15 +11,17 @@ namespace Chronometer___Asynchronous_Processing
         public Chronometer()
         {
             this.sw = new Stopwatch();
+            this.Laps = new List<string>();
         }
 
         public string GetTime => this.sw.Elapsed.ToString();
 
-        public List<string> Laps => throw new System.NotImplementedException();
+        public List<string> Laps => string.Join(\n, Laps);
 
         public string Lap()
         {
-            return "some lap";
+            this.Laps.Add(this.GetTime);
+            return this.GetTime;
         }
 
         public void Reset()
