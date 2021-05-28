@@ -7,25 +7,26 @@ namespace Chronometer___Asynchronous_Processing
     public class Chronometer : IChronometer
     {
         private readonly Stopwatch sw;
-
+        private readonly List<string> laps;
         public Chronometer()
         {
             this.sw = new Stopwatch();
-            this.Laps = new List<string>();
+            this.laps = new List<string>();
         }
 
-        public string GetTime => this.sw.Elapsed.ToString();
+        public string GetTime => $"{sw.Elapsed.Minutes:D2}:{sw.Elapsed.Seconds:D2}:{sw.Elapsed.Milliseconds:D4}";
 
-        public List<string> Laps => string.Join(\n, Laps);
+        public List<string> Laps => this.laps;
 
         public string Lap()
         {
-            this.Laps.Add(this.GetTime);
+            this.laps.Add(this.GetTime);
             return this.GetTime;
         }
 
         public void Reset()
         {
+            this.laps.Clear();
             this.sw.Reset();
         }
 
