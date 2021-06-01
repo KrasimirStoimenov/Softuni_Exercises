@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HandmadeHTTPServer.Server.Http.HttpRequest;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -31,6 +32,8 @@ namespace HandmadeHttpServer.Server
                 var stream = connection.GetStream();
 
                 var requestText = await this.ReadRequest(stream);
+
+                var parseRequest = HttpRequest.ParseHttpRequest(requestText);
 
                 Console.WriteLine(requestText);
 
