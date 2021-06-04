@@ -17,9 +17,11 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
 
         public List<HttpHeader> Headers { get; private set; }
 
-        public string Url { get; private set; }
+        public string Path { get; private set; }
 
-        public string Body { get; set; }
+        public string Body { get; private set; }
+
+        public Dictionary<string, string> Query { get; private set; }
 
         public static HttpRequest ParseHttpRequest(string request)
         {
@@ -31,19 +33,44 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
 
             var url = firstLineSplitted[1];
 
+            var (path, query) = ParseUrl(url);
+
             var headers = ParseHeaders(lines.Skip(1));
 
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
 
+            var body = string.Join(newLine, bodyLines);
+
             return new HttpRequest
             {
                 Method = method,
-                Url = url,
+                Path = path,
                 Headers = headers,
-                Body = string.Join(newLine, bodyLines)
+                Body = body
             };
 
-    }
+        }
+
+        private static (string, Dictionary<string, string>) ParseUrl(string url)
+        {
+            var urlParts = url.Split("?", 2);
+
+            var path = urlParts[0];
+            var query = urlParts.Length > 1
+                        ? ParseQuery(urlParts[1])
+                        : new Dictionary<string, string>();
+
+            return (path, query);
+        }
+
+        private static Dictionary<string, string> ParseQuery(string queryString)
+        {
+            return queryString
+                .Split("&")
+                .Select(part => part.Split("="))
+                .Where(part => part.Length == 2)
+                .ToDictionary(part => part[0], part => part[1]);
+        }
 
         private static List<HttpHeader> ParseHeaders(IEnumerable<string> headers)
         {
@@ -57,11 +84,15 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
 
                 var headerParts = header.Split(":", 2);
 
-                var currentHeader = new HttpHeader()
+                if (headerParts.Length != 2)
                 {
-                    Name = headerParts[0],
-                    Value = headerParts[1]
-                };
+                    throw new InvalidOperationException("Request is not valid.");
+                }
+
+                var name = headerParts[0];
+                var value = headerParts[1];
+
+                var currentHeader = new HttpHeader(name, value);
 
                 currentHeaders.Add(currentHeader);
             }
