@@ -3,7 +3,8 @@
     public enum HttpStatusCode
     {
         OK = 200,
-        NOTFOUND = 404
-
+        Found = 302,
+        BadRequest = 400,
+        NotFound = 404
     }
 }
