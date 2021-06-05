@@ -45,6 +45,7 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
             {
                 Method = method,
                 Path = path,
+                Query = query,
                 Headers = headers,
                 Body = body
             };
