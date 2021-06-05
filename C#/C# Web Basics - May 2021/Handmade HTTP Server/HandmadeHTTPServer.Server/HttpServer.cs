@@ -1,4 +1,6 @@
 ﻿using HandmadeHTTPServer.Server.Http.HttpRequest;
+using HandmadeHTTPServer.Server.Http.HttpResponse;
+using HandmadeHTTPServer.Server.Routing;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -12,12 +14,24 @@ namespace HandmadeHttpServer.Server
         private readonly IPAddress ipAddress;
         private readonly int port;
         private readonly TcpListener listener;
+        private readonly RoutingTable routingTable;
 
-        public HttpServer(string ipAddress, int port)
+        public HttpServer(string ipAddress, int port, Action<IRoutingTable> routingTableConfiguration)
         {
             this.ipAddress = IPAddress.Parse(ipAddress);
             this.port = port;
             this.listener = new TcpListener(this.ipAddress, this.port);
+            routingTableConfiguration(this.routingTable = new RoutingTable());
+        }
+
+        public HttpServer(int port, Action<IRoutingTable> routingTable)
+            : this("127.0.0.1", port, routingTable)
+        {
+        }
+
+        public HttpServer(Action<IRoutingTable> routingTable)
+            : this(5000, routingTable)
+        {
         }
 
         public async Task Start()
@@ -29,15 +43,16 @@ namespace HandmadeHttpServer.Server
             while (true)
             {
                 var connection = await this.listener.AcceptTcpClientAsync();
-                var stream = connection.GetStream();
 
-                var requestText = await this.ReadRequest(stream);
+                var networkStream = connection.GetStream();
 
-                var parseRequest = HttpRequest.ParseHttpRequest(requestText);
+                var requestText = await this.ReadRequest(networkStream);
 
-                Console.WriteLine(requestText);
+                var request = HttpRequest.ParseHttpRequest(requestText);
 
-                await WriteResponse(stream);
+                var response = this.routingTable.ExecuteRequest(request);
+
+                await WriteResponse(networkStream, response);
 
                 connection.Close();
             }
@@ -62,20 +77,9 @@ namespace HandmadeHttpServer.Server
             return requestBuilder.ToString();
         }
 
-        private async Task WriteResponse(NetworkStream stream)
+        private async Task WriteResponse(NetworkStream stream, HttpResponse response)
         {
-            var content = "Hello from My Web Server";
-            var contentLength = Encoding.UTF8.GetByteCount(content);
-
-            var response = @$"   HTTP/1.1 200 OK
-                                Date:{DateTime.UtcNow}
-                                Server:My web server
-                                Content-Type: text/plain
-                                Content-Length: {contentLength}
-
-                                {content}";
-
-            var responseBytes = Encoding.UTF8.GetBytes(response);
+            var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
 
             await stream.WriteAsync(responseBytes);
         }
