@@ -65,7 +65,7 @@ namespace HandmadeHttpServer.Server
             var bufferLength = 1024;
             var buffer = new byte[bufferLength];
 
-            while (stream.DataAvailable)
+            do
             {
                 int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
 
@@ -73,8 +73,10 @@ namespace HandmadeHttpServer.Server
 
                 requestBuilder.Append(request);
             }
+            while (stream.DataAvailable);
 
-            return requestBuilder.ToString();
+
+                return requestBuilder.ToString();
         }
 
         private async Task WriteResponse(NetworkStream stream, HttpResponse response)

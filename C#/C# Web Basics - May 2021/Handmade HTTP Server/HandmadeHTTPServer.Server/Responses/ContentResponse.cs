@@ -7,17 +7,10 @@ namespace HandmadeHTTPServer.Server.Responses
 {
     public class ContentResponse : HttpResponse
     {
-        public ContentResponse(string text, string contentType)
+        public ContentResponse(string content, string contentType)
             : base(HttpStatusCode.OK)
         {
-            Guard.AgainstNull(text);
-
-            var contentLength = Encoding.UTF8.GetByteCount(text).ToString();
-
-            this.Headers.Add(new HttpHeader("Content-Type", contentType));
-            this.Headers.Add(new HttpHeader("Content-Length", contentLength));
-
-            this.Content = text;
+            this.PrepareContent(content, contentType);
         }
     }
 }

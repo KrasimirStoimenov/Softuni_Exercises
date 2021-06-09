@@ -26,9 +26,17 @@ namespace Handmade_HTTP_Server.Controllers
 
         public HttpResponse Dogs()
         {
-            var result = "<h1>Hello from the dogs!</h1>";
+            return View();
+        }
 
-            return Html(result);
+        public HttpResponse Bunnies()
+        {
+            return View("Rabbits");
+        }
+
+        public HttpResponse Turtles()
+        {
+            return View("Animals/Wild/Turtles");
         }
     }
 }

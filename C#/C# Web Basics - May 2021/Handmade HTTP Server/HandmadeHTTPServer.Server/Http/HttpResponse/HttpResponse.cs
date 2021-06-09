@@ -1,6 +1,8 @@
-﻿using System;
+﻿using HandmadeHTTPServer.Server.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HandmadeHTTPServer.Server.Http.HttpResponse
 {
@@ -14,9 +16,9 @@ namespace HandmadeHTTPServer.Server.Http.HttpResponse
             this.Headers.Add(new HttpHeader("Date", $"{DateTime.UtcNow:r}"));
         }
 
-        public HttpStatusCode StatusCode { get; init; }
+        public HttpStatusCode StatusCode { get; protected set; }
 
-        public string Content { get; init; }
+        public string Content { get; protected set; }
 
         public List<HttpHeader> Headers { get; private set; } = new List<HttpHeader>();
 
@@ -39,6 +41,19 @@ namespace HandmadeHTTPServer.Server.Http.HttpResponse
             }
 
             return result.ToString();
+        }
+
+        protected void PrepareContent(string content, string contentType)
+        {
+            Guard.AgainstNull(content, nameof(content));
+            Guard.AgainstNull(contentType, nameof(contentType));
+
+            var contentLength = Encoding.UTF8.GetByteCount(content).ToString();
+
+            this.Headers.Add(new HttpHeader("Content-Type", contentType));
+            this.Headers.Add(new HttpHeader("Content-Length", contentLength));
+
+            this.Content = content;
         }
     }
 }
