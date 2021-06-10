@@ -12,15 +12,15 @@ namespace HandmadeHTTPServer.Server.Http.HttpResponse
         {
             this.StatusCode = statusCode;
 
-            this.Headers.Add(new HttpHeader("Server", "My Web Server"));
-            this.Headers.Add(new HttpHeader("Date", $"{DateTime.UtcNow:r}"));
+            this.Headers.Add(HttpHeader.Server, new HttpHeader(HttpHeader.Server, "My Web Server"));
+            this.Headers.Add(HttpHeader.Date,new HttpHeader(HttpHeader.Date, $"{DateTime.UtcNow:r}"));
         }
 
         public HttpStatusCode StatusCode { get; protected set; }
 
         public string Content { get; protected set; }
 
-        public List<HttpHeader> Headers { get; private set; } = new List<HttpHeader>();
+        public IDictionary<string, HttpHeader> Headers { get; } = new Dictionary<string, HttpHeader>();
 
         public override string ToString()
         {
@@ -28,7 +28,7 @@ namespace HandmadeHTTPServer.Server.Http.HttpResponse
 
             result.AppendLine($"HTTP/1.1 {(int)this.StatusCode} {this.StatusCode}");
 
-            foreach (var header in this.Headers)
+            foreach (var header in this.Headers.Values)
             {
                 result.AppendLine(header.ToString());
             }
@@ -50,8 +50,8 @@ namespace HandmadeHTTPServer.Server.Http.HttpResponse
 
             var contentLength = Encoding.UTF8.GetByteCount(content).ToString();
 
-            this.Headers.Add(new HttpHeader("Content-Type", contentType));
-            this.Headers.Add(new HttpHeader("Content-Length", contentLength));
+            this.Headers.Add(HttpHeader.ContentType,new HttpHeader(HttpHeader.ContentType, contentType));
+            this.Headers.Add(HttpHeader.ContentLength,new HttpHeader(HttpHeader.ContentLength, contentLength));
 
             this.Content = content;
         }

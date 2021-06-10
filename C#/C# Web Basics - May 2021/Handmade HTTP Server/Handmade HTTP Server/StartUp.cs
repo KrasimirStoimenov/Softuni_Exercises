@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Handmade_HTTP_Server.Controllers;
 using HandmadeHttpServer.Server;
+using HandmadeHTTPServer.Controllers;
 using HandmadeHTTPServer.Server.Controllers;
 
 namespace HandmadeHttpServer
@@ -16,7 +17,9 @@ namespace HandmadeHttpServer
                  .MapGet<AnimalsController>("/Cats", c => c.Cats())
                  .MapGet<AnimalsController>("/Dogs", c => c.Dogs())
                  .MapGet<AnimalsController>("/Bunnies", c => c.Bunnies())
-                 .MapGet<AnimalsController>("/Turtles", c => c.Turtles()))
+                 .MapGet<AnimalsController>("/Turtles", c => c.Turtles())
+                 .MapGet<CatsController>("/Cats/Create",c=>c.Create())
+                 .MapPost<CatsController>("/Cats/Save",c=>c.Save()))
              .Start();
         }
     }

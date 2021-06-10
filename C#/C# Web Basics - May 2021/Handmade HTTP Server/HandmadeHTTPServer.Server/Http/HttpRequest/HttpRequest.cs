@@ -8,20 +8,17 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
     {
         private const string newLine = "\r\n";
 
-        public HttpRequest()
-        {
-            this.Headers = new List<HttpHeader>();
-        }
-
         public HttpMethod Method { get; private set; }
-
-        public List<HttpHeader> Headers { get; private set; }
 
         public string Path { get; private set; }
 
         public string Body { get; private set; }
 
-        public Dictionary<string, string> Query { get; private set; }
+        public IReadOnlyDictionary<string, HttpHeader> Headers { get; private set; }
+
+        public IReadOnlyDictionary<string, string> Query { get; private set; }
+
+        public IReadOnlyDictionary<string, string> Form { get; private set; }
 
         public static HttpRequest ParseHttpRequest(string request)
         {
@@ -41,15 +38,30 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
 
             var body = string.Join(newLine, bodyLines);
 
+            var form = ParseForm(headers, body);
+
             return new HttpRequest
             {
                 Method = method,
                 Path = path,
                 Query = query,
                 Headers = headers,
-                Body = body
+                Body = body,
+                Form = form
             };
 
+        }
+
+        private static HttpMethod ParseMethod(string request)
+        {
+            var parsed = Enum.TryParse<HttpMethod>(request, out var method);
+
+            if (parsed)
+            {
+                return method;
+            }
+
+            throw new InvalidOperationException("Method is not supported!");
         }
 
         private static (string, Dictionary<string, string>) ParseUrl(string url)
@@ -64,18 +76,9 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
             return (path, query);
         }
 
-        private static Dictionary<string, string> ParseQuery(string queryString)
+        private static Dictionary<string, HttpHeader> ParseHeaders(IEnumerable<string> headers)
         {
-            return queryString
-                .Split("&")
-                .Select(part => part.Split("="))
-                .Where(part => part.Length == 2)
-                .ToDictionary(part => part[0], part => part[1]);
-        }
-
-        private static List<HttpHeader> ParseHeaders(IEnumerable<string> headers)
-        {
-            var currentHeaders = new List<HttpHeader>();
+            var currentHeaders = new Dictionary<string, HttpHeader>();
             foreach (var header in headers)
             {
                 if (header == string.Empty)
@@ -95,22 +98,31 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
 
                 var currentHeader = new HttpHeader(name, value);
 
-                currentHeaders.Add(currentHeader);
+                currentHeaders.Add(name, currentHeader);
             }
 
             return currentHeaders;
         }
 
-        private static HttpMethod ParseMethod(string request)
+        private static Dictionary<string, string> ParseQuery(string queryString)
         {
-            var parsed = Enum.TryParse<HttpMethod>(request, out var method);
+            return queryString
+                .Split("&")
+                .Select(part => part.Split("="))
+                .Where(part => part.Length == 2)
+                .ToDictionary(part => part[0], part => part[1]);
+        }
 
-            if (parsed)
+        private static Dictionary<string, string> ParseForm(Dictionary<string, HttpHeader> headers, string body)
+        {
+            var result = new Dictionary<string, string>();
+
+            if (headers.ContainsKey(HttpHeader.ContentType) && headers[HttpHeader.ContentType].Value == HttpContentType.FormUrlEncoded)
             {
-                return method;
+                result = ParseQuery(body);
             }
 
-            throw new InvalidOperationException("Method is not supported!");
+            return result;
         }
     }
 }
