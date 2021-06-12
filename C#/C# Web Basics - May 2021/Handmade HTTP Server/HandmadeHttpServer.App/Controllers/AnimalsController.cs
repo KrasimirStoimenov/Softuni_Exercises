@@ -34,7 +34,12 @@ namespace HandmadeHttpServer.App.Controllers
 
         public HttpResponse Dogs()
         {
-            return View();
+            return View(new DogViewModel
+            {
+                Name = "Rex",
+                Age = 3,
+                Breed = "Street Perfect"
+            });
         }
 
         public HttpResponse Bunnies()
