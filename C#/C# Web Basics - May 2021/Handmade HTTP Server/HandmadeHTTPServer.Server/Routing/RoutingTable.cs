@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HandmadeHttpServer.Common;
 using HandmadeHttpServer.Http.HttpRequest;
 using HandmadeHttpServer.Http.HttpResponse;
-using HandmadeHttpServer.Responses;
+using HandmadeHttpServer.Results;
 
 namespace HandmadeHttpServer.Routing
 {
@@ -64,7 +64,7 @@ namespace HandmadeHttpServer.Routing
 
             if (!this.routes.ContainsKey(requestMethod) || !this.routes[requestMethod].ContainsKey(requestPath))
             {
-                return new NotFoundResponse();
+                return new HttpResponse(HttpStatusCode.NotFound);
             }
 
             var responseFunction = this.routes[requestMethod][requestPath];

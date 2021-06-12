@@ -16,6 +16,8 @@ namespace HandmadeHttpServer.Http.HttpRequest
 
         public IReadOnlyDictionary<string, HttpHeader> Headers { get; private set; }
 
+        public IReadOnlyDictionary<string, HttpCookie> Cookies { get; private set; }
+
         public IReadOnlyDictionary<string, string> Query { get; private set; }
 
         public IReadOnlyDictionary<string, string> Form { get; private set; }
@@ -34,6 +36,8 @@ namespace HandmadeHttpServer.Http.HttpRequest
 
             var headers = ParseHeaders(lines.Skip(1));
 
+            var cookies = ParseCookies(headers);
+
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
 
             var body = string.Join(newLine, bodyLines);
@@ -46,6 +50,7 @@ namespace HandmadeHttpServer.Http.HttpRequest
                 Path = path,
                 Query = query,
                 Headers = headers,
+                Cookies = cookies,
                 Body = body,
                 Form = form
             };
@@ -102,6 +107,30 @@ namespace HandmadeHttpServer.Http.HttpRequest
             }
 
             return currentHeaders;
+        }
+
+        private static Dictionary<string, HttpCookie> ParseCookies(Dictionary<string, HttpHeader> headers)
+        {
+            var cookies = new Dictionary<string, HttpCookie>();
+
+            if (headers.ContainsKey(HttpHeader.Cookie))
+            {
+                var cookieHeader = headers[HttpHeader.Cookie];
+
+                var allCookies = cookieHeader.Value.Split("; ");
+
+                foreach (var cookie in allCookies)
+                {
+                    var cookieParts = cookie.Split('=');
+
+                    var cookieName = cookieParts[0];
+                    var cookieValue = cookieParts[1];
+
+                    cookies.Add(cookieName, new HttpCookie(cookieName, cookieValue));
+                }
+            }
+
+            return cookies;
         }
 
         private static Dictionary<string, string> ParseQuery(string queryString)

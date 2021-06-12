@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using HandmadeHttpServer.Responses;
+using HandmadeHttpServer.Results;
 using HandmadeHttpServer.Http.HttpRequest;
 using HandmadeHttpServer.Http.HttpResponse;
 
@@ -10,38 +10,40 @@ namespace HandmadeHttpServer.Controllers
         protected Controller(HttpRequest request)
         {
             this.Request = request;
+            this.Response = new HttpResponse(HttpStatusCode.OK);
         }
 
         protected HttpRequest Request { get; init; }
+        protected HttpResponse Response { get; init; }
 
-        protected HttpResponse Text(string text)
+        protected ActionResult Text(string text)
         {
-            return new TextResponse(text);
+            return new TextResult(this.Response,text);
         }
 
-        protected HttpResponse Html(string html)
+        protected ActionResult Html(string html)
         {
-            return new HtmlResponse(html);
+            return new HtmlResult(this.Response,html);
         }
 
-        protected HttpResponse Redirect(string location)
+        protected ActionResult Redirect(string location)
         {
-            return new RedirectResponse(location);
+            return new RedirectResult(this.Response,location);
         }
 
-        protected HttpResponse View([CallerMemberName] string viewName = "")
+        protected ActionResult View([CallerMemberName] string viewName = "")
         {
-            return new ViewResponse(viewName, GetControllerName(), null);
+            return new ViewResult(this.Response,viewName, GetControllerName(), null);
         }
 
-        protected HttpResponse View(string viewName, object model)
+        protected ActionResult View(string viewName, object model)
         {
-            return new ViewResponse(viewName, this.GetControllerName(), model);
+            return new ViewResult(this.Response,viewName, this.GetControllerName(), model);
         }
 
-        protected HttpResponse View(object model, [CallerMemberName] string viewName = "")
+        protected ActionResult View(object model, [CallerMemberName] string viewName = "")
         {
-            return new ViewResponse(viewName, this.GetControllerName(), model);
+            return new ViewResult(this.Response,viewName, this.GetControllerName(), model);
         }
 
         private string GetControllerName()

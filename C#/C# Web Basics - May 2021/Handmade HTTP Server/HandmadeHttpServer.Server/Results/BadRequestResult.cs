@@ -1,10 +1,10 @@
 ﻿using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHttpServer.Responses
+namespace HandmadeHttpServer.Results
 {
-    public class BadRequestResponse : HttpResponse
+    public class BadRequestResult : HttpResponse
     {
-        public BadRequestResponse() 
+        public BadRequestResult() 
             : base(HttpStatusCode.BadRequest)
         {
         }
