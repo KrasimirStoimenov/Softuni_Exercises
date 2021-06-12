@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HandmadeHTTPServer.Server.Common
+namespace HandmadeHttpServer.Common
 {
     public static class Guard
     {

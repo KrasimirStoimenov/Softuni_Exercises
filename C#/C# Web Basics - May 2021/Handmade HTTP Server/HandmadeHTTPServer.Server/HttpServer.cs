@@ -1,13 +1,13 @@
-﻿using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
-using HandmadeHTTPServer.Server.Routing;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
+using HandmadeHttpServer.Routing;
 
-namespace HandmadeHttpServer.Server
+namespace HandmadeHttpServer
 {
     public class HttpServer
     {
@@ -76,7 +76,7 @@ namespace HandmadeHttpServer.Server
             while (stream.DataAvailable);
 
 
-                return requestBuilder.ToString();
+            return requestBuilder.ToString();
         }
 
         private async Task WriteResponse(NetworkStream stream, HttpResponse response)

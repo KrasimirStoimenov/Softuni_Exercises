@@ -1,7 +1,7 @@
-﻿using HandmadeHTTPServer.Server.Http;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
+﻿using HandmadeHttpServer.Http;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Server.Responses
+namespace HandmadeHttpServer.Responses
 {
     public class RedirectResponse : HttpResponse
     {

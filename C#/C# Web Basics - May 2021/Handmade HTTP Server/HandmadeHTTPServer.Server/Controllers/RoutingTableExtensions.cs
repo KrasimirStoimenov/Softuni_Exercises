@@ -1,9 +1,9 @@
 ﻿using System;
-using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
-using HandmadeHTTPServer.Server.Routing;
+using HandmadeHttpServer.Routing;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Server.Controllers
+namespace HandmadeHttpServer.Controllers
 {
     public static class RoutingTableExtensions
     {

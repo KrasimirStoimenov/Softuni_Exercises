@@ -1,6 +1,6 @@
-﻿using HandmadeHTTPServer.Server.Http.HttpResponse;
+﻿using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Server.Responses
+namespace HandmadeHttpServer.Responses
 {
     public class BadRequestResponse : HttpResponse
     {

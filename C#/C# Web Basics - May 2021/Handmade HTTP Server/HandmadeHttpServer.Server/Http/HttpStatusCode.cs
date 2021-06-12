@@ -1,4 +1,4 @@
-﻿namespace HandmadeHTTPServer.Server.Http.HttpResponse
+﻿namespace HandmadeHttpServer.Http.HttpResponse
 {
     public enum HttpStatusCode
     {

@@ -1,8 +1,8 @@
-﻿using HandmadeHTTPServer.Server.Controllers;
-using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
+﻿using HandmadeHttpServer.Controllers;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Controllers
+namespace HandmadeHttpServer.App.Controllers
 {
     public class CatsController : Controller
     {

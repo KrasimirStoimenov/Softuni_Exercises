@@ -1,4 +1,4 @@
-﻿namespace HandmadeHTTPServer.Server.Http
+﻿namespace HandmadeHttpServer.Http
 {
     public class HttpContentType
     {

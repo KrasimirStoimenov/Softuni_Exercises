@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
-namespace HandmadeHTTPServer.Server.Http.HttpRequest
+namespace HandmadeHttpServer.Http.HttpRequest
 {
     public class HttpRequest
     {
@@ -54,7 +54,7 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
 
         private static HttpMethod ParseMethod(string request)
         {
-            var parsed = Enum.TryParse<HttpMethod>(request, out var method);
+            var parsed = Enum.TryParse<HttpMethod>(request, true, out var method);
 
             if (parsed)
             {
@@ -86,7 +86,7 @@ namespace HandmadeHTTPServer.Server.Http.HttpRequest
                     break;
                 }
 
-                var headerParts = header.Split(":", 2);
+                var headerParts = header.Split(": ", 2);
 
                 if (headerParts.Length != 2)
                 {

@@ -1,6 +1,6 @@
-﻿using HandmadeHTTPServer.Server.Http;
+﻿using HandmadeHttpServer.Http;
 
-namespace HandmadeHTTPServer.Server.Responses
+namespace HandmadeHttpServer.Responses
 {
     public class HtmlResponse : ContentResponse
     {

@@ -1,10 +1,9 @@
-﻿using HandmadeHTTPServer.Server.Common;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+using System.Collections.Generic;
+using HandmadeHttpServer.Common;
 
-namespace HandmadeHTTPServer.Server.Http.HttpResponse
+namespace HandmadeHttpServer.Http.HttpResponse
 {
     public class HttpResponse
     {

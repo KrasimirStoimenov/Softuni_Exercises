@@ -1,6 +1,6 @@
-﻿using HandmadeHTTPServer.Server.Common;
+﻿using HandmadeHttpServer.Common;
 
-namespace HandmadeHTTPServer.Server.Http
+namespace HandmadeHttpServer.Http
 {
     public class HttpHeader
     {
@@ -9,6 +9,7 @@ namespace HandmadeHTTPServer.Server.Http
         public const string Server = "Server";
         public const string Date = "Date";
         public const string Location = "Location";
+
         public HttpHeader(string name, string value)
         {
             Guard.AgainstNull(name, nameof(name));

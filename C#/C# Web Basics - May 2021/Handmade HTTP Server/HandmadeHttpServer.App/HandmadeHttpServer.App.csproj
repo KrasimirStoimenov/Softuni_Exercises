@@ -3,11 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>HandmadeHTTPServer</RootNamespace>
+    <RootNamespace>HandmadeHttpServer.App</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HandmadeHTTPServer.Server\HandmadeHTTPServer.Server.csproj" />
+    <ProjectReference Include="..\HandmadeHTTPServer.Server\HandmadeHttpServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

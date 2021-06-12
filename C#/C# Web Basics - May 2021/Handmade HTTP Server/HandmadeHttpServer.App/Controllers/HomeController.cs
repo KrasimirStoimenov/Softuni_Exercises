@@ -1,8 +1,8 @@
-﻿using HandmadeHTTPServer.Server.Controllers;
-using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
+﻿using HandmadeHttpServer.Controllers;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace Handmade_HTTP_Server.Controllers
+namespace HandmadeHttpServer.App.Controllers
 {
     public class HomeController : Controller
     {
@@ -18,7 +18,7 @@ namespace Handmade_HTTP_Server.Controllers
 
         public HttpResponse LocalRedirect()
         {
-            return Redirect("/dogs");
+            return Redirect("/cats");
         }
 
         public HttpResponse ToGoogle()

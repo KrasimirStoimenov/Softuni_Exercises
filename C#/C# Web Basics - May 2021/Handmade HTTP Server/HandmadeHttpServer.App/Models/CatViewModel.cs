@@ -1,4 +1,4 @@
-﻿namespace HandmadeHTTPServer.Models
+﻿namespace HandmadeHttpServer.App.Models
 {
     public class CatViewModel
     {

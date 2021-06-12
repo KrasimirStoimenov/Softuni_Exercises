@@ -1,9 +1,9 @@
-﻿using HandmadeHTTPServer.Models;
-using HandmadeHTTPServer.Server.Controllers;
-using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
+﻿using HandmadeHttpServer.App.Models;
+using HandmadeHttpServer.Controllers;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace Handmade_HTTP_Server.Controllers
+namespace HandmadeHttpServer.App.Controllers
 {
     public class AnimalsController : Controller
     {

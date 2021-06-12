@@ -1,8 +1,8 @@
 ﻿using System;
-using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Server.Routing
+namespace HandmadeHttpServer.Routing
 {
     public interface IRoutingTable
     {

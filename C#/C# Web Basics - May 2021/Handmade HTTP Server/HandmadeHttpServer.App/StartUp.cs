@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Handmade_HTTP_Server.Controllers;
-using HandmadeHttpServer.Server;
-using HandmadeHTTPServer.Controllers;
-using HandmadeHTTPServer.Server.Controllers;
+using HandmadeHttpServer.Controllers;
+using HandmadeHttpServer.App.Controllers;
 
-namespace HandmadeHttpServer
+namespace HandmadeHttpServer.App
 {
     class StartUp
     {
@@ -13,7 +11,7 @@ namespace HandmadeHttpServer
             await new HttpServer(routes => routes
                  .MapGet<HomeController>("/", c => c.Index())
                  .MapGet<HomeController>("/ToCats", c => c.LocalRedirect())
-                 .MapGet<HomeController>("/Softuni", c => c.ToGoogle())
+                 .MapGet<HomeController>("/Google", c => c.ToGoogle())
                  .MapGet<AnimalsController>("/Cats", c => c.Cats())
                  .MapGet<AnimalsController>("/Dogs", c => c.Dogs())
                  .MapGet<AnimalsController>("/Bunnies", c => c.Bunnies())

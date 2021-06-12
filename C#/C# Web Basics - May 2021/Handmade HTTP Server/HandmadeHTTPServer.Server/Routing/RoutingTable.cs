@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using HandmadeHTTPServer.Server.Common;
-using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
-using HandmadeHTTPServer.Server.Responses;
+using HandmadeHttpServer.Common;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
+using HandmadeHttpServer.Responses;
 
-namespace HandmadeHTTPServer.Server.Routing
+namespace HandmadeHttpServer.Routing
 {
     public class RoutingTable : IRoutingTable
     {

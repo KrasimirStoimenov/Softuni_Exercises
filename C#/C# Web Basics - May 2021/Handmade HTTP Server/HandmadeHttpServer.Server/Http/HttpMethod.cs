@@ -1,4 +1,4 @@
-﻿namespace HandmadeHTTPServer.Server.Http.HttpRequest
+﻿namespace HandmadeHttpServer.Http.HttpRequest
 {
     public enum HttpMethod
     {

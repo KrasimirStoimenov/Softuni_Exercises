@@ -1,9 +1,9 @@
-﻿using HandmadeHTTPServer.Server.Http.HttpRequest;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
-using HandmadeHTTPServer.Server.Responses;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
+using HandmadeHttpServer.Responses;
+using HandmadeHttpServer.Http.HttpRequest;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Server.Controllers
+namespace HandmadeHttpServer.Controllers
 {
     public abstract class Controller
     {

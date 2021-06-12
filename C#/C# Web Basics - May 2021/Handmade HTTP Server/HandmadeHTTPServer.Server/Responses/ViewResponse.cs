@@ -1,9 +1,9 @@
-﻿using HandmadeHTTPServer.Server.Http;
-using HandmadeHTTPServer.Server.Http.HttpResponse;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using HandmadeHttpServer.Http;
+using HandmadeHttpServer.Http.HttpResponse;
 
-namespace HandmadeHTTPServer.Server.Responses
+namespace HandmadeHttpServer.Responses
 {
     public class ViewResponse : HttpResponse
     {
