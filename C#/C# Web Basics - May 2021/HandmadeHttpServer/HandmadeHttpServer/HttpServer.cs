@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using HandmadeHttpServer.Http;
 using HandmadeHttpServer.Http.HttpRequest;
 using HandmadeHttpServer.Http.HttpResponse;
 using HandmadeHttpServer.Routing;
@@ -48,11 +49,24 @@ namespace HandmadeHttpServer
 
                 var requestText = await this.ReadRequest(networkStream);
 
-                var request = HttpRequest.ParseHttpRequest(requestText);
 
-                var response = this.routingTable.ExecuteRequest(request);
+                try
+                {
+                    var request = HttpRequest.ParseHttpRequest(requestText);
 
-                await WriteResponse(networkStream, response);
+                    var response = this.routingTable.ExecuteRequest(request);
+
+                    this.PrepareSession(request, response);
+
+                    this.LogPipeline(request, response);
+
+                    await WriteResponse(networkStream, response);
+                }
+                catch (Exception ex)
+                {
+
+                    await HandleError(networkStream, ex);
+                }
 
                 connection.Close();
             }
@@ -77,6 +91,42 @@ namespace HandmadeHttpServer
 
 
             return requestBuilder.ToString();
+        }
+
+        private void PrepareSession(HttpRequest request, HttpResponse response)
+        {
+            response.AddCookie(HttpSession.SessionCookieName, request.Session.Id);
+        }
+
+        private void LogPipeline(HttpRequest request, HttpResponse response)
+        {
+            var separator = new string('-', 50);
+
+            var log = new StringBuilder();
+
+            log.AppendLine();
+            log.AppendLine(separator);
+
+            log.AppendLine("REQUEST:");
+            log.AppendLine(request.ToString());
+
+            log.AppendLine();
+
+            log.AppendLine("RESPONSE:");
+            log.AppendLine(response.ToString());
+
+            log.AppendLine();
+
+            Console.WriteLine(log);
+        }
+
+        private async Task HandleError(NetworkStream networkStream, Exception exception)
+        {
+            var errorMessage = $"{exception.Message}{Environment.NewLine}{exception.StackTrace}";
+
+            var errorResponse = HttpResponse.ForError(errorMessage);
+
+            await WriteResponse(networkStream, errorResponse);
         }
 
         private async Task WriteResponse(NetworkStream stream, HttpResponse response)

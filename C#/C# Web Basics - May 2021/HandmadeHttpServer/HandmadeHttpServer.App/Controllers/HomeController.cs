@@ -1,4 +1,5 @@
-﻿using HandmadeHttpServer.Controllers;
+﻿using System;
+using HandmadeHttpServer.Controllers;
 using HandmadeHttpServer.Http.HttpRequest;
 using HandmadeHttpServer.Http.HttpResponse;
 
@@ -24,6 +25,11 @@ namespace HandmadeHttpServer.App.Controllers
         public HttpResponse ToGoogle()
         {
             return Redirect("https://google.com");
+        }
+
+        public HttpResponse Error()
+        {
+            throw new InvalidOperationException("Invalid action!");
         }
     }
 }

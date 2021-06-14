@@ -8,7 +8,11 @@ namespace HandmadeHttpServer.Http.HttpRequest
     {
         private const string newLine = "\r\n";
 
+        private static Dictionary<string, HttpSession> Sessions = new();
+
         public HttpMethod Method { get; private set; }
+
+        public HttpSession Session { get; private set; }
 
         public string Path { get; private set; }
 
@@ -38,6 +42,8 @@ namespace HandmadeHttpServer.Http.HttpRequest
 
             var cookies = ParseCookies(headers);
 
+            var session = GetSession(cookies);
+
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
 
             var body = string.Join(newLine, bodyLines);
@@ -51,6 +57,7 @@ namespace HandmadeHttpServer.Http.HttpRequest
                 Query = query,
                 Headers = headers,
                 Cookies = cookies,
+                Session = session,
                 Body = body,
                 Form = form
             };
@@ -131,6 +138,20 @@ namespace HandmadeHttpServer.Http.HttpRequest
             }
 
             return cookies;
+        }
+
+        private static HttpSession GetSession(Dictionary<string, HttpCookie> cookies)
+        {
+            var sessionId = cookies.ContainsKey(HttpSession.SessionCookieName)
+                ? cookies[HttpSession.SessionCookieName].Value
+                : Guid.NewGuid().ToString();
+
+            if (!Sessions.ContainsKey(sessionId))
+            {
+                Sessions[sessionId] = new HttpSession(sessionId);
+            }
+
+            return Sessions[sessionId];
         }
 
         private static Dictionary<string, string> ParseQuery(string queryString)

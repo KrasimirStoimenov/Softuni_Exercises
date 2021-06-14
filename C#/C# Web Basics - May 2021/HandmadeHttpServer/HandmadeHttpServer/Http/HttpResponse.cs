@@ -23,6 +23,14 @@ namespace HandmadeHttpServer.Http.HttpResponse
 
         public IDictionary<string, HttpCookie> Cookies { get; } = new Dictionary<string, HttpCookie>();
 
+        public static HttpResponse ForError(string message)
+        {
+            return new HttpResponse(HttpStatusCode.InternalServerError)
+            {
+                Content = message
+            };
+        }
+
         public void AddHeader(string name, string value)
         {
             Guard.AgainstNull(name, nameof(name));

@@ -1,6 +1,7 @@
 ﻿using HandmadeHttpServer.Controllers;
 using HandmadeHttpServer.Http.HttpRequest;
 using HandmadeHttpServer.Http.HttpResponse;
+using System;
 
 namespace HandmadeHttpServer.App.Controllers
 {
@@ -25,6 +26,22 @@ namespace HandmadeHttpServer.App.Controllers
             this.Response.AddCookie("SecondCookie", "SecondCookieValue");
 
             return Text($"Cookies set!");
+        }
+
+        public HttpResponse ActionWithSession()
+        {
+            const string currentDateKey = "CurrentDate";
+
+            if (this.Request.Session.ContainsKey(currentDateKey))
+            {
+                var currentDate = this.Request.Session[currentDateKey];
+
+                return Text($"Stored date: {currentDate}");
+            }
+
+            this.Request.Session[currentDateKey] = DateTime.UtcNow.ToString();
+
+            return Text("Current date stored!");
         }
     }
 }
