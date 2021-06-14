@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HandmadeHttpServer.Server\HandmadeHttpServer.csproj" />
+    <ProjectReference Include="..\HandmadeHttpServer\HandmadeHttpServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
