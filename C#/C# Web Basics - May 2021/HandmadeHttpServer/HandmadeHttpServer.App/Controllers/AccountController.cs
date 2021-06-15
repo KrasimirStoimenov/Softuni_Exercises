@@ -12,7 +12,33 @@ namespace HandmadeHttpServer.App.Controllers
         {
         }
 
-        public HttpResponse ActionWithCookies()
+        public HttpResponse Login()
+        {
+            var userId = "TempUserId";
+
+            this.SignIn(userId);
+
+            return Text("User authenticated!");
+        }
+
+        public HttpResponse Logout()
+        {
+            this.SignOut();
+
+            return Text("User signed out!");
+        }
+
+        public HttpResponse AuthenticationCheck()
+        {
+            if (this.User.IsAuthenticated)
+            {
+                return Text($"Authenticated user: {this.User.Id}");
+            }
+
+            return Text("User is not authenticated!");
+        }
+
+        public HttpResponse CookieCheck()
         {
             const string cookieName = "MyFirstCookie";
             if (this.Request.Cookies.ContainsKey(cookieName))
@@ -28,7 +54,7 @@ namespace HandmadeHttpServer.App.Controllers
             return Text($"Cookies set!");
         }
 
-        public HttpResponse ActionWithSession()
+        public HttpResponse SessionCheck()
         {
             const string currentDateKey = "CurrentDate";
 

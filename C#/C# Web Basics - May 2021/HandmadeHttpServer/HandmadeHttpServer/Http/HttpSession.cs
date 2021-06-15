@@ -31,5 +31,13 @@ namespace HandmadeHttpServer.Http
         {
             return this.data.ContainsKey(key);
         }
+
+        public void Remove(string key)
+        {
+            if (this.data.ContainsKey(key))
+            {
+                this.data.Remove(key);
+            }
+        }
     }
 }
