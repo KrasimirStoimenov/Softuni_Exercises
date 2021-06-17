@@ -35,38 +35,21 @@ namespace HandmadeHttpServer.Controllers
         }
 
         protected ActionResult Text(string text)
-        {
-            return new TextResult(this.Response, text);
-        }
+            => new TextResult(this.Response, text);
 
         protected ActionResult Html(string html)
-        {
-            return new HtmlResult(this.Response, html);
-        }
+            => new HtmlResult(this.Response, html);
 
         protected ActionResult Redirect(string location)
-        {
-            return new RedirectResult(this.Response, location);
-        }
+            => new RedirectResult(this.Response, location);
 
         protected ActionResult View([CallerMemberName] string viewName = "")
-        {
-            return new ViewResult(this.Response, viewName, GetControllerName(), null);
-        }
+            => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), null);
 
         protected ActionResult View(string viewName, object model)
-        {
-            return new ViewResult(this.Response, viewName, this.GetControllerName(), model);
-        }
+            => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), model);
 
         protected ActionResult View(object model, [CallerMemberName] string viewName = "")
-        {
-            return new ViewResult(this.Response, viewName, this.GetControllerName(), model);
-        }
-
-        private string GetControllerName()
-        {
-            return this.GetType().Name.Replace(nameof(Controller), string.Empty);
-        }
+            => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), model);
     }
 }
