@@ -59,7 +59,7 @@ namespace HandmadeHttpServer
 
                         this.PrepareSession(request, response);
 
-                        this.LogPipeline(request, response);
+                        this.LogPipeline(requestText, response.ToString());
 
                         await WriteResponse(networkStream, response);
                     }
@@ -139,6 +139,11 @@ namespace HandmadeHttpServer
             var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
 
             await stream.WriteAsync(responseBytes);
+
+            if (response.HasContent)
+            {
+                await stream.WriteAsync(response.Content);
+            }
         }
     }
 }

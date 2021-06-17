@@ -13,23 +13,18 @@ namespace HandmadeHttpServer.App.Controllers
         }
 
         public HttpResponse Index()
-        {
-            return Text("Hello from My handmade web server");
-        }
+            => Text("Hello from My handmade web server");
 
         public HttpResponse LocalRedirect()
-        {
-            return Redirect("/cats");
-        }
+            => Redirect("/cats");
 
         public HttpResponse ToGoogle()
-        {
-            return Redirect("https://google.com");
-        }
+            => Redirect("https://google.com");
+
+        public HttpResponse StaticFiles()
+            => View();
 
         public HttpResponse Error()
-        {
-            throw new InvalidOperationException("Invalid action!");
-        }
+            => throw new InvalidOperationException("Invalid action!");
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using HandmadeHttpServer.Common;
+using HandmadeHttpServer.Http;
 using HandmadeHttpServer.Http.HttpRequest;
 using HandmadeHttpServer.Http.HttpResponse;
 using HandmadeHttpServer.Results;
@@ -55,6 +57,32 @@ namespace HandmadeHttpServer.Routing
         public IRoutingTable MapPost(string path, Func<HttpRequest, HttpResponse> responseFunction)
         {
             return this.Map(HttpMethod.POST, path, responseFunction);
+        }
+
+        public IRoutingTable MapStaticFiles(string folder = Settings.StaticFilesRootFolder)
+        {
+            var currentDirectory = Directory.GetCurrentDirectory();
+            var staticFilesFolder = Path.Combine(currentDirectory, folder);
+            var staticFiles = Directory.GetFiles(staticFilesFolder, "*.*", SearchOption.AllDirectories);
+
+            foreach (var file in staticFiles)
+            {
+                var relativePath = Path.GetRelativePath(staticFilesFolder, file);
+
+                var urlPath = "/" + relativePath.Replace("\\", "/");
+
+                this.MapGet(urlPath, request =>
+                {
+                    var content = File.ReadAllBytes(file);
+                    var fileExtension = Path.GetExtension(file).Trim('.');
+                    var contentType = HttpContentType.GetByFileExtension(fileExtension);
+
+                    return new HttpResponse(HttpStatusCode.OK)
+                        .SetContent(content, contentType);
+                });
+
+            }
+            return this;
         }
 
         public HttpResponse ExecuteRequest(HttpRequest request)

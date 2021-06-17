@@ -9,10 +9,12 @@ namespace HandmadeHttpServer.App
         static async Task Main(string[] args)
         {
             await new HttpServer(routes => routes
+                 .MapStaticFiles()
                  .MapGet<HomeController>("/", c => c.Index())
                  .MapGet<HomeController>("/ToCats", c => c.LocalRedirect())
                  .MapGet<HomeController>("/Google", c => c.ToGoogle())
                  .MapGet<HomeController>("/Error", c => c.Error())
+                 .MapGet<HomeController>("/StaticFiles", c=>c.StaticFiles())
                  .MapGet<AccountController>("/Login", c => c.Login())
                  .MapGet<AccountController>("/Logout", c => c.Logout())
                  .MapGet<AccountController>("/Cookies", c => c.CookieCheck())
