@@ -5,6 +5,7 @@ using HandmadeHttpServer.Http.HttpResponse;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using HandmadeHttpServer.Http;
 
 namespace HandmadeHttpServer.Controllers
 {
@@ -35,14 +36,28 @@ namespace HandmadeHttpServer.Controllers
             {
                 var controllerName = controllerAction.DeclaringType.GetControllerName();
                 var actionName = controllerAction.Name;
-
                 var path = $"/{controllerName}/{actionName}";
 
                 var responseFunction = GetResponseFunction(controllerAction);
 
-                routingTable.MapGet(path, responseFunction);
+                var httpMethod = HttpMethod.GET;
 
-                MapDefaultRoutes(routingTable, controllerName, actionName, responseFunction);
+                var httpMethodAttribute = controllerAction
+                    .GetCustomAttribute<HttpMethodAttribute>();
+
+                if (httpMethodAttribute != null)
+                {
+                    httpMethod = httpMethodAttribute.HttpMethod;
+                }
+
+                routingTable.Map(httpMethod, path, responseFunction);
+
+                MapDefaultRoutes(
+                    routingTable,
+                    httpMethod,
+                    controllerName,
+                    actionName,
+                    responseFunction);
             }
 
             return routingTable;
@@ -61,6 +76,11 @@ namespace HandmadeHttpServer.Controllers
         private static Func<HttpRequest, HttpResponse> GetResponseFunction(MethodInfo controllerAction)
             => request =>
              {
+                 if (!UserIsAuthorized(controllerAction, request.Session))
+                 {
+                     return new HttpResponse(HttpStatusCode.Unauthorized);
+                 }
+
                  var controllerInstance = CreateController(controllerAction.DeclaringType, request);
 
                  return (HttpResponse)controllerAction.Invoke(controllerInstance, Array.Empty<object>());
@@ -75,6 +95,7 @@ namespace HandmadeHttpServer.Controllers
 
         private static void MapDefaultRoutes(
             IRoutingTable routingTable,
+            HttpMethod httpMethod,
             string controllerName,
             string actionName,
             Func<HttpRequest, HttpResponse> responseFunction)
@@ -84,13 +105,36 @@ namespace HandmadeHttpServer.Controllers
 
             if (actionName == defaultActionName)
             {
-                routingTable.MapGet($"/{controllerName}", responseFunction);
+                routingTable.Map(httpMethod, $"/{controllerName}", responseFunction);
 
                 if (controllerName == defaultControllerName)
                 {
-                    routingTable.MapGet("/", responseFunction);
+                    routingTable.Map(httpMethod, "/", responseFunction);
                 }
             }
+        }
+        private static bool UserIsAuthorized(
+            MethodInfo controllerAction,
+            HttpSession session)
+        {
+            var authorizationRequired = controllerAction
+                .DeclaringType
+                .GetCustomAttribute<AuthorizeAttribute>()
+                ?? controllerAction
+                .GetCustomAttribute<AuthorizeAttribute>();
+
+            if (authorizationRequired != null)
+            {
+                var userIsAuthorized = session.ContainsKey(Controller.UserSessionKey)
+                    && session[Controller.UserSessionKey] != null;
+
+                if (!userIsAuthorized)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

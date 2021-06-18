@@ -38,6 +38,10 @@ namespace HandmadeHttpServer.App.Controllers
             return Text("User is not authenticated!");
         }
 
+        [Authorize]
+        public HttpResponse AuthorizationCheck()
+            => Text($"Current user: {this.User.Id}");
+
         public HttpResponse CookieCheck()
         {
             const string cookieName = "MyFirstCookie";
