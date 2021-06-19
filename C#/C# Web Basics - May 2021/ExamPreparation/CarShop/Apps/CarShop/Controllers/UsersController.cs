@@ -22,9 +22,7 @@ namespace CarShop.Controllers
         }
 
         public HttpResponse Register()
-        {
-            return this.View();
-        }
+            => View();
 
         [HttpPost]
         public HttpResponse Register(RegisterUserFormModel model)
@@ -59,8 +57,33 @@ namespace CarShop.Controllers
         }
 
         public HttpResponse Login()
+            => View();
+
+        [HttpPost]
+        public HttpResponse Login(LoginUserFormModel model)
         {
-            return this.View();
+            var hashedPassword = this.passwordHasher.HashPassword(model.Password);
+
+            var userId = this.data.Users
+                .Where(u => u.Username == model.Username && u.Password == hashedPassword)
+                .Select(u => u.Id)
+                .FirstOrDefault();
+
+            if (userId == null)
+            {
+                return Error($"Username and password combination is not valid!");
+            }
+
+            this.SignIn(userId);
+
+            return Redirect("/Cars/All");
+        }
+
+        public HttpResponse Logout()
+        {
+            this.SignOut();
+
+            return Redirect("/");
         }
     }
 }
