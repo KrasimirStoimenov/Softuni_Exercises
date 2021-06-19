@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using CarShop.Data;
 using CarShop.ViewModels.Cars;
+using CarShop.ViewModels.Issues;
 using CarShop.ViewModels.Users;
 
 namespace CarShop.Services
@@ -66,6 +67,16 @@ namespace CarShop.Services
 
             return errors;
         }
+        public ICollection<string> ValidateIssue(AddIssueFormModel model)
+        {
+            var errors = new List<string>();
 
+            if (model.Description.Length < DataConstants.IssueDescriptionMinLength)
+            {
+                errors.Add($"Issue description should be at least {DataConstants.IssueDescriptionMinLength} characters long.");
+            }
+
+            return errors;
+        }
     }
 }

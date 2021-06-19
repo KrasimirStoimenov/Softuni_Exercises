@@ -12,5 +12,7 @@
 
         public const int CarModelMinLength = 5;
         public const string PlateNumberValidatorRegex = @"[A-Z]{2} [0-9]{4} [A-Z]{2}";
+
+        public const int IssueDescriptionMinLength = 5;
     }
 }
