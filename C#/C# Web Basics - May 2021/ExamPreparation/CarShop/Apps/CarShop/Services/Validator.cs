@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using CarShop.Data;
+using CarShop.ViewModels.Cars;
 using CarShop.ViewModels.Users;
 
 namespace CarShop.Services
@@ -38,5 +40,32 @@ namespace CarShop.Services
 
             return errors;
         }
+        public ICollection<string> ValidateCar(AddCarFormModel model)
+        {
+            var errors = new List<string>();
+
+            if (model.Model.Length < DataConstants.CarModelMinLength || model.Model.Length > DataConstants.DefaultMaxLength)
+            {
+                errors.Add($"Model {model.Model} is not valid. It must be between {DataConstants.CarModelMinLength} and {DataConstants.DefaultMaxLength} characters long.");
+            }
+
+            if (model.Year < 1900 || model.Year > DateTime.Now.Year)
+            {
+                errors.Add($"Year {model.Year} is not valid. It must be between 1900 and {DateTime.Now.Year} characters long.");
+            }
+
+            if (!Uri.IsWellFormedUriString(model.Image, UriKind.Absolute))
+            {
+                errors.Add($"Image {model.Image} is not valid URL");
+            }
+
+            if (!Regex.IsMatch(model.PlateNumber, DataConstants.PlateNumberValidatorRegex))
+            {
+                errors.Add($"Plate Number {model.PlateNumber} is not valid. It must be in format 'AA 0000 AA'");
+            }
+
+            return errors;
+        }
+
     }
 }
