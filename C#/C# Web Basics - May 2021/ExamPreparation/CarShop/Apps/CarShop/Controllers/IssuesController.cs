@@ -96,5 +96,26 @@ namespace CarShop.Controllers
             return Redirect($"/Issues/CarIssues?carId={carId}");
         }
 
+        [Authorize]
+        public HttpResponse Delete(string issueId, string carId)
+        {
+            var currentCar = this.data.Cars.FirstOrDefault(c => c.Id == carId);
+            var currentIssue = this.data.Issues.FirstOrDefault(i => i.Id == issueId);
+
+            if (currentCar == null)
+            {
+                return Error($"Car with Id: {carId} does not exists.");
+            }
+
+            if (currentIssue == null)
+            {
+                return Error($"Issue with Id: {issueId} does not exists.");
+            }
+
+            this.data.Issues.Remove(currentIssue);
+            this.data.SaveChanges();
+
+            return Redirect($"/Issues/CarIssues?carId={carId}");
+        }
     }
 }
