@@ -18,7 +18,6 @@ namespace Git.Data.Models
         public string Email { get; init; }
 
         [Required]
-        [MaxLength(DataConstants.UserUsernameMaxLength)]
         public string Password { get; init; }
 
         public ICollection<Repository> Repositories { get; init; } = new HashSet<Repository>();

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Git.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210621154234_InitialDatabaseCreate")]
+    [Migration("20210621160811_InitialDatabaseCreate")]
     partial class InitialDatabaseCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,8 +85,7 @@ namespace Git.Data.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
