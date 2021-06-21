@@ -8,6 +8,9 @@
         public const int UserPasswordMaxLength = 20;
         public const string EmailRegularExpression = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 
+        public const int RepositoryNameMinLength = 3;
         public const int RepositoryNameMaxLength = 10;
+        public const string RepositoryTypePrivate = "Private";
+        public const string RepositoryTypePublic = "Public";
     }
 }

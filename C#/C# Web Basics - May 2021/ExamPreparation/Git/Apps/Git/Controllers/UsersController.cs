@@ -61,17 +61,27 @@ namespace Git.Controllers
 
             var hashedPassword = this.passwordHasher.HashPassword(model.Password);
 
-            var currentUser = this.data.Users
-                .FirstOrDefault(u => u.Username == model.Username && u.Password == hashedPassword);
+            var currentUserId = this.data.Users
+                .Where(u => u.Username == model.Username && u.Password == hashedPassword)
+                .Select(u => u.Id)
+                .FirstOrDefault();
 
-            if (currentUser == null)
+
+            if (currentUserId == null)
             {
                 return Error($"Wrong username or password!");
             }
 
-            this.SignIn(currentUser.Id);
+            this.SignIn(currentUserId);
 
             return Redirect("/Repositories/All");
+        }
+
+        public HttpResponse Logout()
+        {
+            this.SignOut();
+
+            return Redirect("/");
         }
     }
 }
