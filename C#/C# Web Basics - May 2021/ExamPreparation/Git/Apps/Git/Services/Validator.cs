@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Git.Data;
+using Git.ViewModels.Commits;
 using Git.ViewModels.Repositories;
 using Git.ViewModels.Users;
 
@@ -64,6 +65,18 @@ namespace Git.Services
             if (model.RepositoryType != DataConstants.RepositoryTypePrivate && model.RepositoryType != DataConstants.RepositoryTypePublic)
             {
                 errors.Add($"Repository type {model.RepositoryType} is not valid. Repository type should be either Private or Public");
+            }
+
+            return errors;
+        }
+
+        public ICollection<string> ValidateCommitCreateModel(CreateCommitFormModel model)
+        {
+            var errors = new List<string>();
+
+            if (model.Description.Length < DataConstants.CommitDescriptionMinLength)
+            {
+                errors.Add($"Commit '{model.Description}' is not valid. Commit description should be at least {DataConstants.CommitDescriptionMinLength}");
             }
 
             return errors;

@@ -49,7 +49,6 @@ namespace Git.Controllers
             return Redirect("/Repositories/All");
         }
 
-        [Authorize]
         public HttpResponse All()
         {
             var currentUser = this.data.Users.FirstOrDefault(u => u.Id == this.User.Id);
@@ -58,6 +57,7 @@ namespace Git.Controllers
                 .Where(r => r.IsPublic)
                 .Select(r => new RepositoryListingViewModel
                 {
+                    Id = r.Id,
                     Name = r.Name,
                     Owner = r.Owner.Username,
                     CreatedOn = r.CreatedOn,

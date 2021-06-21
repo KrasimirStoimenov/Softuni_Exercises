@@ -12,5 +12,7 @@
         public const int RepositoryNameMaxLength = 10;
         public const string RepositoryTypePrivate = "Private";
         public const string RepositoryTypePublic = "Public";
+
+        public const int CommitDescriptionMinLength = 5;
     }
 }
