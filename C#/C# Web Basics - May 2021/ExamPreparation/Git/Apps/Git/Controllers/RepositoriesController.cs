@@ -51,10 +51,19 @@ namespace Git.Controllers
 
         public HttpResponse All()
         {
-            var currentUser = this.data.Users.FirstOrDefault(u => u.Id == this.User.Id);
+            var repositoryQuery = this.data.Repositories.AsQueryable();
 
-            var repositories = this.data.Repositories
-                .Where(r => r.IsPublic)
+            if (this.User.IsAuthenticated)
+            {
+                repositoryQuery = repositoryQuery.Where(r => r.IsPublic || r.OwnerId == this.User.Id);
+            }
+            else
+            {
+                repositoryQuery = repositoryQuery.Where(r => r.IsPublic);
+            }
+
+            var repositories = repositoryQuery
+                .OrderByDescending(r => r.CreatedOn)
                 .Select(r => new RepositoryListingViewModel
                 {
                     Id = r.Id,
