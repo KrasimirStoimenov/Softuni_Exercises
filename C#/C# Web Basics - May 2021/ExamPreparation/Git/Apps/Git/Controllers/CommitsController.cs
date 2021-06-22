@@ -27,6 +27,11 @@ namespace Git.Controllers
                 .Where(r => r.Id == id)
                 .FirstOrDefault();
 
+            if (currentRepo == null)
+            {
+                return BadRequest();
+            }
+
             return View(currentRepo);
         }
 
@@ -58,7 +63,34 @@ namespace Git.Controllers
         [Authorize]
         public HttpResponse All()
         {
-            return View();
+            var commits = this.data.Commits
+                .Where(c => c.CreatorId == this.User.Id)
+                .Select(c => new CommitListingViewModel
+                {
+                    RepositoryName = c.Repository.Name,
+                    CreatedOn = c.CreatedOn,
+                    Description = c.Description
+                })
+                .ToList();
+
+            return View(commits);
+        }
+
+        [Authorize]
+        public HttpResponse Delete(string commitId)
+        {
+            var commit = this.data.Commits.FirstOrDefault(c => c.Id == commitId);
+
+            if (commit == null || commit.CreatorId != this.User.Id)
+            {
+                return BadRequest();
+            }
+
+            this.data.Commits.Remove(commit);
+
+            this.data.SaveChanges();
+
+            return Redirect("/Commits/All");
         }
     }
 }
