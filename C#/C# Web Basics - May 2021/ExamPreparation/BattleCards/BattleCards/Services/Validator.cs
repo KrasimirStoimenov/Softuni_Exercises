@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BattleCards.Data;
+using BattleCards.ViewModels.Cards;
 using BattleCards.ViwModels.Users;
 
 namespace BattleCards.Services
@@ -37,6 +39,43 @@ namespace BattleCards.Services
             if (!Regex.IsMatch(model.Email, EmailRegularExpression))
             {
                 errors.Add("Entered email is not valid email address.");
+            }
+
+            return errors;
+        }
+
+        public ICollection<string> ValidateCard(AddCardFormModel model)
+        {
+            var errors = new List<string>();
+
+            if (model.Name.Length < CardNameMinLength || model.Name.Length > CardNameMaxLength)
+            {
+                errors.Add($"Card name '{model.Name}' is not valid. Card name should be between {CardNameMinLength} and {CardNameMaxLength} characters long.");
+            }
+
+            if (!Uri.IsWellFormedUriString(model.Image, UriKind.Absolute))
+            {
+                errors.Add("Provided invalid image Url.");
+            }
+
+            if (model.Keyword != CardKeywordValueChallenger && model.Keyword != CardKeywordValueElusive && model.Keyword != CardKeywordValueEphemeral && model.Keyword != CardKeywordValueFearsome && model.Keyword != CardKeywordValueLifesteal && model.Keyword != CardKeywordValueOverwhelm && model.Keyword != CardKeywordValueTough)
+            {
+                errors.Add("Provided keyword is not supported.");
+            }
+
+            if (model.Attack < CardMinimalAttack)
+            {
+                errors.Add("Attack should be positive number");
+            }
+            
+            if (model.Health < CardMinimalHealth)
+            {
+                errors.Add("Health should be positive number");
+            }
+
+            if(model.Description.Length > CardDescriptionMaxLength)
+            {
+                errors.Add($"Description should be maximum {CardDescriptionMaxLength} characters long.");
             }
 
             return errors;

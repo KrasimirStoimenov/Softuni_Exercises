@@ -34,7 +34,7 @@ namespace BattleCards.Controllers
                 return Error(errors);
             }
 
-            if (this.data.Users.Any(u => u.Username == model.Username || u.Email == u.Email))
+            if (this.data.Users.Any(u => u.Username == model.Username && u.Email == u.Email))
             {
                 return Error($"User with username '{model.Username}' already exist.");
             }
