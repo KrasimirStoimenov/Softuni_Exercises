@@ -20,8 +20,8 @@ namespace SharedTrip.Data.Models
 
         public DateTime DepartureTime { get; init; }
 
-        [Range(TripSeatsMinValue, TripSeatsMaxValue)]
-        public int Seats { get; init; }
+        [Range(0, TripSeatsMaxValue)]
+        public int Seats { get; set; }
 
         [Required]
         [MaxLength(TripDescriptionMaxLength)]
