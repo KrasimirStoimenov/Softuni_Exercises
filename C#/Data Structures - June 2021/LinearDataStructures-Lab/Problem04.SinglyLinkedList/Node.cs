@@ -2,6 +2,13 @@
 {
     public class Node<T>
     {
-        // TODO: Implement
+        public Node(T value)
+        {
+            Value = value;
+        }
+
+        public T Value { get; private set; }
+
+        public Node<T> Next { get; set; }
     }
 }
