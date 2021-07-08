@@ -30,7 +30,7 @@
 
         public T Dequeue()
         {
-            this.ChechIfNotEmpty();
+            this.EnsureNotEmpty();
 
             var oldHeadItem = this.head.Item;
 
@@ -66,7 +66,7 @@
 
         public T Peek()
         {
-            this.ChechIfNotEmpty();
+            this.EnsureNotEmpty();
 
             return this.head.Item;
         }
