@@ -85,12 +85,10 @@
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();
 
-        private void ChechIfNotEmpty()
+        private void EnsureNotEmpty()
         {
-            if (this.head == null)
-            {
+            if (this.Count == 0)
                 throw new InvalidOperationException();
-            }
         }
     }
 }
