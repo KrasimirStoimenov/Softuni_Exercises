@@ -6,37 +6,91 @@
 
     public class FastQueue<T> : IAbstractQueue<T>
     {
-        private Node<T> _head;
+        private Node<T> head;
+        private Node<T> tail;
+
         public int Count { get; private set; }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            var node = this.head;
+
+            while (node != null)
+            {
+                if (node.Item.Equals(item))
+                {
+                    return true;
+                }
+
+                node = node.Next;
+            }
+
+            return false;
         }
 
         public T Dequeue()
         {
-            throw new NotImplementedException();
+            this.ChechIfNotEmpty();
+
+            var oldHeadItem = this.head.Item;
+
+            if (this.head.Next == null)
+            {
+                this.head = this.tail = null;
+            }
+            else
+            {
+                this.head = this.head.Next;
+            }
+
+            this.Count--;
+
+            return oldHeadItem;
         }
 
         public void Enqueue(T item)
         {
-            throw new NotImplementedException();
+            var newNode = new Node<T>(item, null);
+
+            if (this.Count == 0)
+            {
+                this.head = this.tail = newNode;
+                this.Count++;
+                return;
+            }
+
+            this.tail.Next = newNode;
+            this.tail = this.tail.Next;
+            this.Count++;
         }
 
         public T Peek()
         {
-            throw new NotImplementedException();
+            this.ChechIfNotEmpty();
+
+            return this.head.Item;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            var node = this.head;
+
+            while (node != null)
+            {
+                yield return node.Item;
+                node = node.Next;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
+            => this.GetEnumerator();
+
+        private void ChechIfNotEmpty()
         {
-            throw new NotImplementedException();
+            if (this.head == null)
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }
