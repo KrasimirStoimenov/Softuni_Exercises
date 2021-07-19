@@ -47,10 +47,28 @@
             return ouputString;
         }
 
-
         public Tree<T> GetDeepestLeftomostNode()
         {
-            throw new NotImplementedException();
+            Tree<T> deepestLeftmostNode = null;
+            var dfs = new Stack<Tree<T>>();
+            dfs.Push(this);
+
+            while (dfs.Count != 0)
+            {
+                var currentTree = dfs.Pop();
+
+                foreach (var child in currentTree.children)
+                {
+                    dfs.Push(child);
+                }
+
+                if (dfs.Count == 0)
+                {
+                    deepestLeftmostNode = currentTree;
+                }
+            }
+
+            return deepestLeftmostNode;
         }
 
         public List<T> GetLeafKeys()
@@ -62,7 +80,6 @@
             return leafKeysList;
         }
 
-
         public List<T> GetMiddleKeys()
         {
             var middleNodesKeys = new List<T>();
@@ -72,21 +89,60 @@
             return middleNodesKeys.OrderBy(x => x).ToList();
         }
 
-
         public List<T> GetLongestPath()
         {
-            throw new NotImplementedException();
+            var deepestLeftmostNode = GetDeepestLeftomostNode();
+
+            var longestPathValues = new List<T>();
+            while (deepestLeftmostNode != null)
+            {
+                longestPathValues.Add(deepestLeftmostNode.Key);
+                deepestLeftmostNode = deepestLeftmostNode.Parent;
+            }
+
+            longestPathValues.Reverse();
+            return longestPathValues;
         }
 
         public List<List<T>> PathsWithGivenSum(int sum)
         {
-            throw new NotImplementedException();
+            var currentPathValues = new List<T>();
+            var validPaths = new List<List<T>>();
+            var currentSum = 0;
+            GetAllPathsWithGivenSum(this, ref currentSum, sum, currentPathValues, validPaths);
+
+            return validPaths;
         }
 
         public List<Tree<T>> SubTreesWithGivenSum(int sum)
         {
             throw new NotImplementedException();
         }
+
+        private void GetAllPathsWithGivenSum(
+                Tree<T> tree,
+                ref int currentSum,
+                int searchedSum,
+                List<T> currentPathValues,
+                List<List<T>> validPaths)
+        {
+            currentSum += Convert.ToInt32(tree.Key);
+            currentPathValues.Add(tree.Key);
+
+            foreach (var child in tree.children)
+            {
+                GetAllPathsWithGivenSum(child, ref currentSum, searchedSum, currentPathValues, validPaths);
+            }
+
+            if (currentSum == searchedSum)
+            {
+                validPaths.Add(new List<T>(currentPathValues));
+            }
+
+            currentSum -= Convert.ToInt32(tree.Key);
+            currentPathValues.RemoveAt(currentPathValues.Count - 1);
+        }
+
         private void GetTreeMiddleNodeKeys(Tree<T> tree, List<T> middleNodesKeys)
         {
             if (tree.Parent != null && tree.children.Count > 0)
