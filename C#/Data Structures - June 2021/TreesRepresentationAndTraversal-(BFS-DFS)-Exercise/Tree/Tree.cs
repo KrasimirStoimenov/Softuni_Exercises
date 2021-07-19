@@ -50,32 +50,19 @@
         public Tree<T> GetDeepestLeftomostNode()
         {
             Tree<T> deepestLeftmostNode = null;
-            var dfs = new Stack<Tree<T>>();
-            dfs.Push(this);
-
-            while (dfs.Count != 0)
-            {
-                var currentTree = dfs.Pop();
-
-                foreach (var child in currentTree.children)
-                {
-                    dfs.Push(child);
-                }
-
-                if (dfs.Count == 0)
-                {
-                    deepestLeftmostNode = currentTree;
-                }
-            }
+            int deepestLevel = 0;
+            int currentLevel = 0;
+            GetDeepestNodeDFS(this, ref deepestLevel, ref currentLevel, ref deepestLeftmostNode);
 
             return deepestLeftmostNode;
         }
+
 
         public List<T> GetLeafKeys()
         {
             var leafKeysList = new List<T>();
 
-            GetAllLeaves(this, leafKeysList);
+            GetAllLeavesDFS(this, leafKeysList);
 
             return leafKeysList;
         }
@@ -84,7 +71,7 @@
         {
             var middleNodesKeys = new List<T>();
 
-            GetTreeMiddleNodeKeys(this, middleNodesKeys);
+            GetTreeMiddleNodeKeysDFS(this, middleNodesKeys);
 
             return middleNodesKeys.OrderBy(x => x).ToList();
         }
@@ -109,64 +96,17 @@
             var currentPathValues = new List<T>();
             var validPaths = new List<List<T>>();
             var currentSum = 0;
-            GetAllPathsWithGivenSum(this, ref currentSum, sum, currentPathValues, validPaths);
+            GetAllPathsWithGivenSumDFS(this, ref currentSum, sum, currentPathValues, validPaths);
 
             return validPaths;
         }
 
         public List<Tree<T>> SubTreesWithGivenSum(int sum)
         {
-            throw new NotImplementedException();
-        }
+            var validSubtrees = new List<Tree<T>>();
+            GetAllValidSubtreesDFS(this, sum, validSubtrees);
 
-        private void GetAllPathsWithGivenSum(
-                Tree<T> tree,
-                ref int currentSum,
-                int searchedSum,
-                List<T> currentPathValues,
-                List<List<T>> validPaths)
-        {
-            currentSum += Convert.ToInt32(tree.Key);
-            currentPathValues.Add(tree.Key);
-
-            foreach (var child in tree.children)
-            {
-                GetAllPathsWithGivenSum(child, ref currentSum, searchedSum, currentPathValues, validPaths);
-            }
-
-            if (currentSum == searchedSum)
-            {
-                validPaths.Add(new List<T>(currentPathValues));
-            }
-
-            currentSum -= Convert.ToInt32(tree.Key);
-            currentPathValues.RemoveAt(currentPathValues.Count - 1);
-        }
-
-        private void GetTreeMiddleNodeKeys(Tree<T> tree, List<T> middleNodesKeys)
-        {
-            if (tree.Parent != null && tree.children.Count > 0)
-            {
-                middleNodesKeys.Add(tree.Key);
-            }
-
-            foreach (var child in tree.children)
-            {
-                GetTreeMiddleNodeKeys(child, middleNodesKeys);
-            }
-        }
-
-        private void GetAllLeaves(Tree<T> tree, List<T> leafKeysList)
-        {
-            if (tree.children.Count == 0)
-            {
-                leafKeysList.Add(tree.Key);
-            }
-
-            foreach (var child in tree.children)
-            {
-                GetAllLeaves(child, leafKeysList);
-            }
+            return validSubtrees;
         }
 
         private string GetTreeAsString(Tree<T> tree, int level, StringBuilder sb)
@@ -182,6 +122,87 @@
             }
 
             return sb.ToString();
+        }
+        private void GetDeepestNodeDFS(Tree<T> tree, ref int deepestLevel, ref int currentLevel, ref Tree<T> deepestLeftmostNode)
+        {
+            if (deepestLevel < currentLevel)
+            {
+                deepestLevel = currentLevel;
+                deepestLeftmostNode = tree;
+            }
+
+            foreach (var child in tree.children)
+            {
+                ++currentLevel;
+                GetDeepestNodeDFS(child, ref deepestLevel, ref currentLevel, ref deepestLeftmostNode);
+            }
+
+            --currentLevel;
+        }
+        private void GetAllLeavesDFS(Tree<T> tree, List<T> leafKeysList)
+        {
+            if (tree.children.Count == 0)
+            {
+                leafKeysList.Add(tree.Key);
+            }
+
+            foreach (var child in tree.children)
+            {
+                GetAllLeavesDFS(child, leafKeysList);
+            }
+        }
+
+        private void GetTreeMiddleNodeKeysDFS(Tree<T> tree, List<T> middleNodesKeys)
+        {
+            if (tree.Parent != null && tree.children.Count > 0)
+            {
+                middleNodesKeys.Add(tree.Key);
+            }
+
+            foreach (var child in tree.children)
+            {
+                GetTreeMiddleNodeKeysDFS(child, middleNodesKeys);
+            }
+        }
+
+        private void GetAllPathsWithGivenSumDFS(
+            Tree<T> tree,
+            ref int currentSum,
+            int searchedSum,
+            List<T> currentPathValues,
+            List<List<T>> validPaths)
+        {
+            currentSum += Convert.ToInt32(tree.Key);
+            currentPathValues.Add(tree.Key);
+
+            foreach (var child in tree.children)
+            {
+                GetAllPathsWithGivenSumDFS(child, ref currentSum, searchedSum, currentPathValues, validPaths);
+            }
+
+            if (currentSum == searchedSum)
+            {
+                validPaths.Add(new List<T>(currentPathValues));
+            }
+
+            currentSum -= Convert.ToInt32(tree.Key);
+            currentPathValues.RemoveAt(currentPathValues.Count - 1);
+        }
+
+        private int GetAllValidSubtreesDFS(Tree<T> tree, int sum, List<Tree<T>> validSubtrees)
+        {
+            var currentSum = Convert.ToInt32(tree.Key);
+            foreach (var child in tree.children)
+            {
+                currentSum += GetAllValidSubtreesDFS(child, sum, validSubtrees);
+            }
+
+            if (currentSum == sum)
+            {
+                validSubtrees.Add(tree);
+            }
+
+            return currentSum;
         }
     }
 }
