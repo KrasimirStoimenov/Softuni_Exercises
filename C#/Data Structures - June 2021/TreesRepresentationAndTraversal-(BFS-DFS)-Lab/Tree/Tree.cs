@@ -124,6 +124,17 @@
             var firstNodeParent = firstNode.Parent;
             var secondNodeParent = secondNode.Parent;
 
+            if (firstNodeParent == null)
+            {
+                SwapRoot(secondNode);
+                return;
+            }
+            else if (secondNodeParent == null)
+            {
+                SwapRoot(firstNode);
+                return;
+            }
+
             firstNode.Parent = secondNodeParent;
             secondNode.Parent = firstNodeParent;
 
@@ -132,6 +143,15 @@
 
             firstNodeParent.children[indexOfFirst] = secondNode;
             secondNodeParent.children[indexOfSecond] = firstNode;
+        }
+
+        private void SwapRoot(Tree<T> node)
+        {
+            this.Value = node.Value;
+            this.Parent = null;
+            this.children.Clear();
+            this.children.AddRange(node.children);
+            node.Parent = null;
         }
 
         private Tree<T> FindBfs(T parentKey)
