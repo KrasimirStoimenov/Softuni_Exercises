@@ -11,11 +11,14 @@ namespace _01.BinaryTree.Tests
         [SetUp]
         public void InitializeBinaryTree()
         {
-            this._tree = new BinaryTree<int>(17,
-                new BinaryTree<int>(9, new BinaryTree<int>(3, null, null),
-                        new BinaryTree<int>(11, null, null)),
-                new BinaryTree<int>(25, new BinaryTree<int>(20, null, null),
-                        new BinaryTree<int>(31, null, null))
+            this._tree = new BinaryTree<int>(
+                17,
+                new BinaryTree<int>(9, 
+                    new BinaryTree<int>(3, null, null),
+                    new BinaryTree<int>(11, null, null)),
+                new BinaryTree<int>(25, 
+                    new BinaryTree<int>(20, null, null),
+                    new BinaryTree<int>(31, null, null))
             );
         }
 
@@ -44,7 +47,6 @@ namespace _01.BinaryTree.Tests
             }
         }
 
-
         [Test]
         public void TestInOrder()
         {
@@ -56,7 +58,6 @@ namespace _01.BinaryTree.Tests
                 Assert.AreEqual(expected[i], trees[i].Value);
             }
         }
-
 
         [Test]
         public void TestPostOrder()
