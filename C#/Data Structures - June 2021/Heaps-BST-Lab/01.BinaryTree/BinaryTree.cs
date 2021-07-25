@@ -118,13 +118,26 @@
 
         public void ForEachInOrder(Action<T> action)
         {
-            var inOrderTree = new List<IAbstractBinaryTree<T>>();
-            DFSInOrder(this, inOrderTree);
+            //var inOrderTree = new List<IAbstractBinaryTree<T>>();
+            //DFSInOrder(this, inOrderTree);
 
-            foreach (var item in inOrderTree)
+            //foreach (var item in inOrderTree)
+            //{
+            //    action(item.Value);
+            //}
+
+            if (this.LeftChild != null)
             {
-                action(item.Value);
+                this.LeftChild.ForEachInOrder(action);
+            }
+
+            action.Invoke(this.Value);
+
+            if (this.RightChild != null)
+            {
+                this.RightChild.ForEachInOrder(action);
             }
         }
     }
+}
 }
