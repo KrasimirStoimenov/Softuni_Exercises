@@ -1,20 +1,73 @@
 ﻿namespace _02.MaxHeap
 {
     using System;
+    using System.Collections.Generic;
 
     public class MaxHeap<T> : IAbstractHeap<T>
         where T : IComparable<T>
     {
-        public int Size { get { throw new NotImplementedException(); } }
+        private readonly List<T> elements;
+
+        public MaxHeap()
+        {
+            this.elements = new List<T>();
+        }
+
+        public int Size => this.elements.Count;
 
         public void Add(T element)
         {
-            throw new NotImplementedException();
+            this.elements.Add(element);
+            if (this.Size > 1)
+            {
+                this.HeapifyUp(this.Size - 1);
+            }
         }
 
         public T Peek()
         {
-            throw new NotImplementedException();
+            HasElements();
+
+            return this.elements[0];
+        }
+
+        private void HeapifyUp(int index)
+        {
+            if (index == 0)
+            {
+                return;
+            }
+
+            if (IsGreater(index, index - 1))
+            {
+                Swap(index, index - 1);
+                HeapifyUp(index - 1);
+            }
+        }
+
+        private void Swap(int index, int parentIndex)
+        {
+            var temp = this.elements[index];
+            this.elements[index] = this.elements[parentIndex];
+            this.elements[parentIndex] = temp;
+        }
+
+        private bool IsGreater(int index, int parentIndex)
+        {
+            if (this.elements[index].CompareTo(this.elements[parentIndex]) > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void HasElements()
+        {
+            if (this.elements.Count == 0)
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }
