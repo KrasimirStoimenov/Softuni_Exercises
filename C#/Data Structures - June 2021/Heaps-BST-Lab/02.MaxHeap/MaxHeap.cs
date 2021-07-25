@@ -33,15 +33,14 @@
 
         private void HeapifyUp(int index)
         {
-            if (index == 0)
-            {
-                return;
-            }
+            if (index == 0) return;
 
-            if (IsGreater(index, index - 1))
+            var parentIndex = (index - 1) / 2;
+
+            if (IsGreater(index, parentIndex))
             {
-                Swap(index, index - 1);
-                HeapifyUp(index - 1);
+                Swap(index, parentIndex);
+                HeapifyUp(parentIndex);
             }
         }
 
