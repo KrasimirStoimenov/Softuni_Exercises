@@ -8,76 +8,126 @@
 
     public class Loader : IBuffer
     {
-        public int EntitiesCount => throw new NotImplementedException();
+        private List<IEntity> entities;
+
+        public Loader()
+            => this.entities = new List<IEntity>();
+
+        public int EntitiesCount => this.entities.Count;
 
         public void Add(IEntity entity)
         {
-            throw new NotImplementedException();
+            this.entities.Add(entity);
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            this.entities.Clear();
         }
 
         public bool Contains(IEntity entity)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < this.entities.Count; i++)
+            {
+                if (this.entities[i] == entity)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public IEntity Extract(int id)
         {
-            throw new NotImplementedException();
+            var entity = this.entities.Find(e => e.Id == id);
+            if (entity != null)
+            {
+                this.entities.Remove(entity);
+            }
+
+            return entity;
         }
 
         public IEntity Find(IEntity entity)
-        {
-            throw new NotImplementedException();
-        }
+            => this.entities.Find(e => e == entity);
 
         public List<IEntity> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+            => this.entities;
 
         public IEnumerator<IEntity> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+            => this.entities.GetEnumerator();
 
         public void RemoveSold()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < this.entities.Count; i++)
+            {
+                if (this.entities[i].Status == BaseEntityStatus.Sold)
+                {
+                    this.entities.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         public void Replace(IEntity oldEntity, IEntity newEntity)
         {
-            throw new NotImplementedException();
+            var indexOfOldEntity = this.entities.IndexOf(oldEntity);
+            this.CheckIfEntityExist(indexOfOldEntity);
+
+            this.entities[indexOfOldEntity] = newEntity;
         }
 
         public List<IEntity> RetainAllFromTo(BaseEntityStatus lowerBound, BaseEntityStatus upperBound)
         {
-            throw new NotImplementedException();
+            var inBounds = new List<IEntity>();
+
+            for (int i = 0; i < this.entities.Count; i++)
+            {
+                if (this.entities[i].Status >= lowerBound && this.entities[i].Status <= upperBound)
+                {
+                    inBounds.Add(entities[i]);
+                }
+            }
+
+            return inBounds;
         }
 
         public void Swap(IEntity first, IEntity second)
         {
-            throw new NotImplementedException();
+            var indexOfFirst = this.entities.IndexOf(first);
+            this.CheckIfEntityExist(indexOfFirst);
+            var indexOfSecond = this.entities.IndexOf(second);
+            this.CheckIfEntityExist(indexOfSecond);
+
+            var temp = this.entities[indexOfFirst];
+            this.entities[indexOfFirst] = this.entities[indexOfSecond];
+            this.entities[indexOfSecond] = temp;
         }
 
         public IEntity[] ToArray()
-        {
-            throw new NotImplementedException();
-        }
+            => this.entities.ToArray();
 
         public void UpdateAll(BaseEntityStatus oldStatus, BaseEntityStatus newStatus)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < this.entities.Count; i++)
+            {
+                if (this.entities[i].Status == oldStatus)
+                {
+                    this.entities[i].Status = newStatus;
+                }
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
+            => this.GetEnumerator();
+
+        private void CheckIfEntityExist(int index)
         {
-            throw new NotImplementedException();
+            if (index == -1)
+            {
+                throw new InvalidOperationException("Entity not found");
+            }
         }
     }
 }

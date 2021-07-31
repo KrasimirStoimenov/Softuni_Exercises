@@ -43,5 +43,16 @@
 
             return current.Id - this.Id;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is IEntity)
+            {
+                var entity = (IEntity)obj;
+                return entity.Id == this.Id;
+            }
+
+            return false;
+        }
     }
 }

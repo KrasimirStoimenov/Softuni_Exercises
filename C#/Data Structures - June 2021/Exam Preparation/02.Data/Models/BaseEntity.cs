@@ -51,5 +51,10 @@ namespace _02.Data.Models
 
             return other.Id - Id;
         }
+
+        public int CompareTo(IEntity other)
+        {
+            return this.Id - other.Id;
+        }
     }
 }
