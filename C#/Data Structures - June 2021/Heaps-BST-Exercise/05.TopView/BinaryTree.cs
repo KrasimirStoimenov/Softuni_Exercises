@@ -9,7 +9,9 @@
     {
         public BinaryTree(T value, BinaryTree<T> left, BinaryTree<T> right)
         {
-            throw new NotImplementedException();
+            this.Value = value;
+            this.LeftChild = left;
+            this.RightChild = right;
         }
 
         public T Value { get; set; }
@@ -20,7 +22,34 @@
 
         public List<T> TopView()
         {
-            throw new NotImplementedException();
+            var dict = new Dictionary<int, (T nodeValue, int nodeLevel)>();
+
+            this.TopView(this, 0, 0, dict);
+
+            return dict.Values.Select(x => x.nodeValue).ToList();
+        }
+
+        private void TopView(BinaryTree<T> node, int dist, int level, Dictionary<int, (T nodeValue, int nodeLevel)> dict)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            if (dict.ContainsKey(dist))
+            {
+                if (dict[dist].nodeLevel > level)
+                {
+                    dict[dist] = (node.Value, level);
+                }
+            }
+            else
+            {
+                dict.Add(dist, (node.Value, level));
+            }
+
+            this.TopView(node.LeftChild, dist - 1, level + 1, dict);
+            this.TopView(node.RightChild, dist + 1, level + 1, dict);
         }
     }
 }

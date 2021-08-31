@@ -14,7 +14,15 @@
         {
             this.Value = value;
             this.LeftChild = leftChild;
+            if (this.LeftChild != null)
+            {
+                this.LeftChild.Parent = this;
+            }
             this.RightChild = rightChild;
+            if (this.RightChild != null)
+            {
+                this.RightChild.Parent = this;
+            }
         }
 
         public T Value { get; set; }
@@ -27,36 +35,52 @@
 
         public T FindLowestCommonAncestor(T first, T second)
         {
-            var firstElementAncestors = new List<T>();
-            this.Search(this, first, firstElementAncestors);
+            var firstNodeAncestors = this.GetAncestors(this.Search(first));
+            var secondNodeAncestors = this.GetAncestors(this.Search(second));
 
-            var secondElementAncestors = new List<T>();
-            this.Search(this, second, secondElementAncestors);
-
-            var intersectedElements = firstElementAncestors.Intersect(secondElementAncestors).Reverse().ToArray();
+            var intersectedElements = firstNodeAncestors.Intersect(secondNodeAncestors).ToArray();
 
             return intersectedElements[0];
         }
 
-        private void Search(BinaryTree<T> node, T element, List<T> elementAncestors)
+        private List<T> GetAncestors(IAbstractBinaryTree<T> node)
         {
-            if (node == null)
+            var list = new List<T>();
+
+            while (node != null)
             {
-                return;
+                list.Add(node.Value);
+                node = node.Parent;
             }
-
-            elementAncestors.Add(node.Value);
-
-            if (element.CompareTo(node.Value) < 0)
-            {
-
-                Search(node.LeftChild, element, elementAncestors);
-            }
-            else
-            {
-                Search(node.RightChild, element, elementAncestors);
-            }
-
+            return list;
         }
+
+        private IAbstractBinaryTree<T> Search(T element)
+        {
+            var node = this;
+            while (node != null)
+            {
+                if (IsGreater(node.Value, element))
+                {
+                    node = node.LeftChild;
+                }
+                else if (IsSmaller(node.Value, element))
+                {
+                    node = node.RightChild;
+                }
+                else
+                {
+                    return node;
+                }
+            }
+
+            return null;
+        }
+
+        private bool IsGreater(T value, T other)
+            => value.CompareTo(other) > 0;
+
+        private bool IsSmaller(T value, T other)
+            => value.CompareTo(other) < 0;
     }
 }
