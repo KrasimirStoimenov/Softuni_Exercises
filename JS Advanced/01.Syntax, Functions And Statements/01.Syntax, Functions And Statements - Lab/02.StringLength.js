@@ -7,5 +7,5 @@ function strLength(a, b, c) {
 }
 
 strLength('chocolate', 'ice cream', 'cake');
-console.log("-------------")
+console.log('-'.repeat(10));
 strLength('pasta', '5', '22.3');

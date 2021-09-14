@@ -10,5 +10,5 @@ function area(radius) {
 }
 
 area(5);
-console.log("--------");
+console.log('-'.repeat(10));
 area('name');

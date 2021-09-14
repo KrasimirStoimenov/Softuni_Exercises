@@ -4,5 +4,5 @@ function echo(someString) {
 }
 
 echo('Hello, JavaScript!');
-console.log('-----------')
+console.log('-'.repeat(10));
 echo('strings are easy');

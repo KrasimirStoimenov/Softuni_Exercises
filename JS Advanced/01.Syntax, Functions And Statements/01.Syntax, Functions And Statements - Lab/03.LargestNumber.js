@@ -3,5 +3,5 @@ function largestNumber(a, b, c) {
 }
 
 largestNumber(5, -3, 16);
-console.log("------------");
+console.log('-'.repeat(10));
 largestNumber(-3, -5, -22.5);
