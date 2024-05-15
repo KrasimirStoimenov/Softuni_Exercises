@@ -1,0 +1,35 @@
+main {
+    border-style: groove;
+    /* padding-left: 15px;
+    padding-top: 15px; */
+    padding: 15px 15px;
+}
+
+/* Descendant Combinator */
+div p {
+    color: mediumblue;
+}
+
+/* Child Combinator */
+ul>li {
+    list-style: circle;
+}
+
+p>span {
+    color: red;
+}
+
+/* Adjacent Sibling Combinator */
+p+p {
+    background-color: #d4cece;
+}
+
+p+span {
+    color: red;
+}
+
+/* General Sibling Combinator */
+p~span {
+    font-weight: bold;
+    color: red;
+}

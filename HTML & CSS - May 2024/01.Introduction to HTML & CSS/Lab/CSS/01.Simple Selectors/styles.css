@@ -1,0 +1,31 @@
+h1 {
+    color: #eea348;
+}
+
+p {
+    font-size: 18px;
+}
+
+.highlight {
+    background-color: antiquewhite;
+}
+
+#main-title {
+    color: chocolate;
+}
+
+#special-paragraph {
+    font-style: italic;
+}
+
+ul {
+    font-style: italic;
+}
+
+li {
+    color:cornflowerblue;
+}
+
+div{
+    background-color: honeydew;
+}

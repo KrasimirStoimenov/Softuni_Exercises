@@ -1,0 +1,32 @@
+/* Class and Element Combination */
+p.highlighted{
+    color:rgb(0, 153, 255);
+    font-size: 18px;
+}
+
+/* ID and Element Combination */
+div#special{
+    background-color: orange;
+    padding: 15px 15px;
+}
+
+/* Attribute and Class Combination */
+[type="text"].input-text{
+   border-color: aquamarine;
+   padding: 5px 5px;
+   display: block;
+}
+
+.input-field{
+    padding: 5px 5px;
+}
+
+.important{
+    color:rgb(3, 159, 154);
+}
+
+#important-item{
+    font-style: italic;
+    color:red;
+    font-weight: bold;
+}

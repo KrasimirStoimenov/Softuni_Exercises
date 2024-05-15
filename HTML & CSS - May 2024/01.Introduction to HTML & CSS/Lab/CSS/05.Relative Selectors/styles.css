@@ -1,0 +1,52 @@
+/* Descendant Selector */
+section p {
+    color: darkgreen
+}
+
+/* Child Selector */
+ul.main-list>li {
+    font-weight: bold;
+}
+
+/* Adjacent Sibling Selector */
+article.highlight+article {
+    background-color: lightcoral;
+}
+
+/* General Sibling Selector */
+h2.trigger~p {
+    color: royalblue;
+}
+
+/* Combining Relative Selectors for specificity */
+li.special+li a {
+    color: green;
+}
+
+/* Additional styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: navy;
+}
+
+.special {
+    color: tomato;
+}
