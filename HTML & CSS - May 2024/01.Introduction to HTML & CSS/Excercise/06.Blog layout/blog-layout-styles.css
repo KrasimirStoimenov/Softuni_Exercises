@@ -1,0 +1,26 @@
+time{
+    font-style: italic;
+}
+
+span{
+    font-weight: bold;
+}
+
+h2+p{
+    color: gray;
+}
+
+summary{
+    font-weight: bold;
+    padding: 10px 15px;
+}
+
+h3+p{
+    padding: 0 10px;
+    font-style: oblique;
+}
+
+footer{
+    font-style: italic;
+    font-weight:bold;
+}

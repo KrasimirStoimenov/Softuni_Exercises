@@ -1,0 +1,9 @@
+p>span{
+    font-weight: bold;
+}
+
+main>p{
+    font-size:  20px;
+    font-weight: 400;
+    padding: 10px;
+}

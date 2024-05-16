@@ -1,0 +1,27 @@
+h1{
+    color:lightseagreen
+}
+
+input[type="text"]{
+    box-shadow: 2px 2px 5px gray;
+}
+
+button{
+    box-shadow: 2px 2px 5px gray;
+    background-color: beige;
+}
+
+ul li{
+    padding: 4px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+#todo-tasks li:hover{
+    padding: 8px;
+    text-decoration: line-through;
+}
+
+#done-tasks li{
+    text-decoration: line-through;
+}

@@ -1,0 +1,15 @@
+time{
+    font-style: italic;
+}
+
+span{
+    font-weight: bold;
+}
+
+header p{
+    color:gray
+}
+
+article>p{
+    font-weight: bold;
+}
