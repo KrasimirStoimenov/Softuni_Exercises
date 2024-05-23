@@ -4,21 +4,21 @@ section {
     position: relative;
 }
 
-div.item {
+.item {
     border: 1px solid #333;
     padding: 0.5em;
     width: 5em;
     height: 5em;
 }
 
-section.relative div:nth-child(2){
+section.relative .item:nth-child(2){
     position: relative;
     left: 5em;
     top:2em;
     background-color: lightgreen;
 }
 
-section.relative-absolute div:nth-child(2){
+section.relative-absolute .item:nth-child(2){
     position: absolute;
     left: 4em;
     top: 4em;
