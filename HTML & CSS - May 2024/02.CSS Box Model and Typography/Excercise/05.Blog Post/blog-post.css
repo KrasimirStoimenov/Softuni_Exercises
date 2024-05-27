@@ -1,0 +1,50 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family:14px, 'Lato', sans-serif;
+}
+
+body {
+    padding: 2em;
+}
+
+.container {
+    max-width: 650px;
+    border: 2px solid #ddd;
+    margin: 0 auto;
+}
+
+article {
+    padding: 1.5em;
+}
+
+p {
+    padding: 0.5em 0;
+}
+
+time {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 1.8em;
+    margin-bottom: 0.5em;
+}
+
+h3 {
+    font-size: 1.4em;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+}
+
+article p:last-of-type {
+    font-style: italic;
+}
+
+article p:first-of-type {
+    font-weight: bold;
+}

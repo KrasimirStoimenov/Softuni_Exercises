@@ -1,0 +1,54 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 1em 2em;
+}
+
+h2 {
+    padding-bottom: 0.5em;
+}
+
+section {
+    padding: 0.5em;
+}
+
+.link a {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 10%;
+    padding: 0.5em;
+    text-decoration: none;
+    color: black;
+}
+
+.buttons .btn {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 10%;
+    padding: 1em;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+}
+
+.buttons button:nth-child(2),
+.buttons button:nth-child(6),
+.link a:nth-child(2),
+.link a:nth-child(6) {
+    background-color: lightgrey;
+}
+
+.buttons button:nth-child(3),
+.link a:nth-child(3){
+    background-color: orange;
+}
+
+.buttons button:nth-child(4),
+.link a:nth-child(4){
+    background-color: yellow;
+}
+

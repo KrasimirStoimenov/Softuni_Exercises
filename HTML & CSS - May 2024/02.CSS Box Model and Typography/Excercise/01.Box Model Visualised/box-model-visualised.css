@@ -1,0 +1,52 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 600px;
+    margin: 4em auto;
+}
+
+.container div {
+    border: 1px dashed black;
+    padding: 1em 2em 2em 2em;
+}
+
+.container div::before {
+    display: block;
+    padding-bottom: 1em;
+    margin-left: -1em;
+    margin-top: -1em;
+}
+
+.container .margin {
+    background: #FF966F;
+}
+
+.container .margin::before {
+    content: "margin";
+}
+
+.container .border {
+    background: #FFE8C6;
+}
+
+.container .border::before {
+    content: "border";
+}
+
+.container .padding {
+    background: #85EB85;
+}
+
+.container .padding::before {
+    content: "padding";
+}
+
+.container .content {
+    background: #A3D2E2;
+    text-align: center;
+    padding: 1em;
+}
