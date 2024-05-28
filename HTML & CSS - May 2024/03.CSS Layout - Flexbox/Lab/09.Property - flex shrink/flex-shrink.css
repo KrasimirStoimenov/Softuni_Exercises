@@ -1,0 +1,31 @@
+.flex-container {
+    width: 300px;
+    border: 2px solid blue;
+    padding: 1em;
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Default */
+.flex-container.flex-shrink-one .flex-item {
+    flex-shrink: 1;
+}
+
+.flex-container.flex-shrink-zero .flex-item {
+    flex-shrink: 0;
+}
+
+.flex-container.flex-shrink-second-only .flex-item {
+    flex-shrink: 0;
+}
+
+.flex-container.flex-shrink-second-only .flex-item:nth-child(2) {
+    flex-shrink: 1;
+}
+
+.flex-item {
+    background-color: #eee;
+    border: 2px solid #000;
+    padding: 20px;
+    flex-basis: 330px;
+}

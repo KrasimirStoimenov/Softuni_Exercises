@@ -1,0 +1,29 @@
+.flex-container {
+    width: 400px;
+    border: 2px solid blue;
+    padding: 1em;
+    display: flex;
+}
+
+/* Default */
+.flex-container.flex-direction-row {
+    flex-direction: row;
+}
+
+.flex-container.flex-direction-row-reverse {
+    flex-direction: row-reverse;
+}
+
+.flex-container.flex-direction-column {
+    flex-direction: column;
+}
+
+.flex-container.flex-direction-column-reverse {
+    flex-direction: column-reverse;
+}
+
+.flex-item {
+    background-color: #eee;
+    border: 2px solid #000;
+    padding: 20px;
+}
