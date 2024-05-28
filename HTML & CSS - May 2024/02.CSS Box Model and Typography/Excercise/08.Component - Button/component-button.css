@@ -1,54 +1,67 @@
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+html {
+    font: 14px/1.5 Lato, sans-serif;
+}
+
+body, button, textarea, input {
+    font: inherit;
 }
 
 body {
-    padding: 1em 2em;
+    margin: 0;
+    padding: 2em;
 }
 
-h2 {
-    padding-bottom: 0.5em;
-}
-
-section {
-    padding: 0.5em;
-}
-
-.link a {
+.button {
     display: inline-block;
-    border: 1px solid black;
-    border-radius: 10%;
-    padding: 0.5em;
+    padding: 1em 1.5em;
+    text-align: center;
+    color: #333;
+    background: #DDD;
+    border-radius: 0.3em;
     text-decoration: none;
-    color: black;
+    border: 1px solid #ddd;
+    outline: none;
+    cursor: pointer;
 }
 
-.buttons .btn {
-    display: inline-block;
-    border: 1px solid black;
-    border-radius: 10%;
-    padding: 1em;
-    text-decoration: none;
-    color: black;
-    background-color: white;
+.button + .button {
+    margin-left: 1em;
 }
 
-.buttons button:nth-child(2),
-.buttons button:nth-child(6),
-.link a:nth-child(2),
-.link a:nth-child(6) {
-    background-color: lightgrey;
+.button:focus,
+.button:hover {
+    color: #fff;
+    background: #000;
 }
 
-.buttons button:nth-child(3),
-.link a:nth-child(3){
-    background-color: orange;
+.button:active {
+    background: #060;
 }
 
-.buttons button:nth-child(4),
-.link a:nth-child(4){
-    background-color: yellow;
+.button.primary {
+    background: orange;
 }
 
+.button.primary:hover {
+    background: darkorange;
+    color: #fff;
+}
+
+.button.secondary {
+    background: lightgoldenrodyellow;
+}
+
+.button.secondary:hover {
+    background-color: lightblue;
+    color: #333;
+}
+
+.button.outline {
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+.button.outline:hover {
+    background: #eee;
+    color: #333;
+}
