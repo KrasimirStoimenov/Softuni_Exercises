@@ -1,0 +1,28 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 2em;
+    font: 14px/1.5 Lato, sans-serif;
+}
+
+.container {
+    background-color: #eee;
+    box-shadow: 0 0 1em 0 rgb(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5em;
+    gap: 0.5em;
+}
+
+.container .flex-item{
+    border: 1px solid #ddd;
+    border-radius: 0.4em;
+    background-color: white;
+    color: orange;
+    padding: 0.5em 1em;
+    font-weight: bold;
+}

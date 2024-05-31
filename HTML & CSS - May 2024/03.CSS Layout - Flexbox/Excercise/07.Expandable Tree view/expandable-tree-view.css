@@ -1,0 +1,48 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 1em;
+}
+
+h1 {
+    padding-bottom: 0.5em;
+}
+
+details summary {
+    display: inline-block;
+}
+
+ul {
+    padding-left: 1.5em;
+}
+
+ul li li {
+    padding: 0.3em;
+}
+
+body>ul {
+    padding-left: 0;
+}
+
+ul li {
+    list-style: none;
+}
+
+summary::before {
+    display: inline-block;
+    content: '+';
+    background-color: green;
+    color: white;
+    border-radius: 50%;
+    width: 1em;
+    aspect-ratio: 1/1;
+    text-align: center;
+}
+
+details[open]>summary::before {
+    content: '-';
+}

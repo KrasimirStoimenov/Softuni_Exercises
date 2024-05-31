@@ -1,0 +1,62 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #eee;
+    font: 14px/1.5 Lato, sans-serif;
+}
+
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    padding: 0.5em;
+    margin: 3em auto;
+    background-color: lightgray;
+    border: 1px solid #b6b2b2;
+    border-radius: 0.5em;
+    box-shadow: 0 0.3em 0 0 rgb(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.keyboard div {
+    display: flex;
+    padding: 0.5em;
+    gap: 1em;
+}
+
+.keyboard div div {
+    background-color: white;
+    padding: 0.5em;
+    flex-grow: 1;
+    border-radius: 0.4em;
+    justify-content: center;
+    font-weight: bold;
+}
+
+div div .special {
+    background-color: rgb(235, 234, 234);
+}
+
+.space {
+    flex-basis: 40%;
+}
+
+.right-shift {
+    flex-basis: 14%;
+}
+
+.enter {
+    width: 3.2em;
+    height: 4.4em;
+    position: absolute;
+    right: 1em;
+    top: 44%;
+}
+
+.hidden-enter {
+    flex-basis: 2em;
+}
