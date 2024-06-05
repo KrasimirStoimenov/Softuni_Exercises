@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Feature - width</title>
+    <link rel="stylesheet" href="media-feature-width.css">
+</head>
+
+<body>
+    <h1>Media Feature - width, min-width, max-width</h1>
+
+    <section>
+        <h2>width</h2>
+        <div class="media">
+            <p>@media (width: 800px) {</p>
+            <div class="selector">
+                <p>body::before {</p>
+                <p>display: block;</p>
+                <p>content: 'The viewport width is exactly 800px';</p>
+                <p class="closing-parenthesis">}</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>min-width</h2>
+        <div class="media">
+            <p>@media (min-width: 800px) {</p>
+            <div class="selector">
+                <p>body::before {</p>
+                <p>display: block;</p>
+                <p>content: 'The viewport width is larger than 800px';</p>
+                <p class="closing-parenthesis">}</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>max-width</h2>
+        <div class="media">
+            <p>@media (max-width: 800px) {</p>
+            <div class="selector">
+                <p>body::before {</p>
+                <p>display: block;</p>
+                <p>content: 'The viewport width is smaller than 800px';</p>
+                <p class="closing-parenthesis">}</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Types</title>
+    <link rel="stylesheet" href="media-types.css">
+</head>
+
+<body>
+    <h1>Media Types</h1>
+    <p>https://developer.mozilla.org/en-US/docs/Web/CSS/@media#media_types</p>
+    <p>Media types describe the general category of a device. Except when using the not or only logical operators,
+        the media type is optional and the all type is implied.</p>
+    <section>
+        <h2>all</h2>
+        <p>Suitable for all devices</p>
+        <div class="media">
+            <p>@media all {</p>
+            <div class="selector">
+                <p>* {</p>
+                <p>padding: 0;</p>
+                <p>margin: 0;</p>
+                <p>box-sizing: border-box;</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+
+            <div class="selector">
+                <p>body {</p>
+                <p>padding: 2em;</p>
+                <p>font: 14px/1.5 Lato, sans-serif;</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+
+            <div class="selector">
+                <p>p {</p>
+                <p>padding-bottom: 1.5em;</p>
+                <p class="closing-parenthesis">}</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>print</h2>
+        <p>Intended for paged material and documents viewed on a screen in print preview mode</p>
+        <div class="media">
+            <p>@media print {</p>
+            <div class="selector">
+                <p>body::before {</p>
+                <p>display: block;</p>
+                <p>content: 'The page is using a print preview or it was printed';</p>
+                <p class="closing-parenthesis">}</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>screen</h2>
+        <p>Intended primarily for screens</p>
+        <div class="media">
+            <p>@media screen {</p>
+            <div class="selector">
+                <p>body::before {</p>
+                <p>display: block;</p>
+                <p>content: 'The page is being shown on a screen';</p>
+                <p class="closing-parenthesis">}</p>
+                <p class="closing-parenthesis">}</p>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
