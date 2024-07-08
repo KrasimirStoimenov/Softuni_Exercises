@@ -3,7 +3,6 @@ export default function UserAdd({
     onClose
 }) {
     return (
-        // <!-- Create/Edit Form component  -->
         <div className="overlay">
             <div className="backdrop" onClick={onClose}></div>
             <div className="modal">

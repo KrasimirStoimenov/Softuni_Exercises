@@ -7,7 +7,8 @@ import NoUsersError from "../../errors/NoUsersError";
 export default function UserList({
     users,
     isLoading,
-    fetchError
+    fetchError,
+    onDetails
 }) {
 
     return (
@@ -73,6 +74,7 @@ export default function UserList({
                         <UserItem
                             key={user._id}
                             user={user}
+                            onDetails={onDetails}
                         />
                     )}
                 </tbody>

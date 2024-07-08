@@ -2,6 +2,7 @@ import UserList from "./user-list/UserList";
 import UserAdd from "./user-add/UserAdd"
 
 import { useEffect, useState } from "react";
+import UserDetails from "./user-details/UserDetails";
 
 const baseUrl = 'http://localhost:3030/jsonstore'
 
@@ -10,6 +11,7 @@ export default function UserSection() {
     const [isLoading, setIsLoading] = useState(true);
     const [fetchError, setFetchError] = useState(false);
     const [showAddUser, setShowAddUser] = useState(false);
+    const [showUserDetailsById, setShowUserDetailsById] = useState(null);
 
     useEffect(() => {
         async function fetchUsers() {
@@ -42,8 +44,21 @@ export default function UserSection() {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
+        const userDataFlatten = { ...Object.fromEntries(formData) };
+
+        const address = {
+            country: userDataFlatten.country,
+            city: userDataFlatten.city,
+            street: userDataFlatten.street,
+            streetNumber: userDataFlatten.streetNumber,
+        };
         const userData = {
-            ...Object.fromEntries(formData),
+            firstName: userDataFlatten.firstName,
+            lastName: userDataFlatten.lastName,
+            imageUrl: userDataFlatten.imageUrl,
+            email: userDataFlatten.email,
+            phoneNumber: userDataFlatten.phoneNumber,
+            address: address,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
@@ -65,6 +80,10 @@ export default function UserSection() {
         }
     }
 
+    function userDetailsClickHandler(userId) {
+        setShowUserDetailsById(userId);
+    }
+
     return (
         <section className="card users-container">
 
@@ -73,6 +92,7 @@ export default function UserSection() {
                 users={users}
                 isLoading={isLoading}
                 fetchError={fetchError}
+                onDetails={userDetailsClickHandler}
             />
 
             {showAddUser && (
@@ -80,6 +100,13 @@ export default function UserSection() {
                     onSave={addUserSaveHandler}
                     onClose={addUserCloseHandler}
                 />)}
+
+            {showUserDetailsById && (
+                <UserDetails
+                    user={users.find(x => x._id === showUserDetailsById)}
+                    onClose={() => setShowUserDetailsById(null)}
+                />
+            )}
 
             <button className="btn-add btn" onClick={addUserClickHandler}>Add new user</button>
 
