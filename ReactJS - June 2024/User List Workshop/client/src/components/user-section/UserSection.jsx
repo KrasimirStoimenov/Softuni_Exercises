@@ -3,6 +3,7 @@ import UserAdd from "./user-add/UserAdd"
 
 import { useEffect, useState } from "react";
 import UserDetails from "./user-details/UserDetails";
+import UserDelete from "./user-delete/UserDelete";
 
 const baseUrl = 'http://localhost:3030/jsonstore'
 
@@ -12,6 +13,7 @@ export default function UserSection() {
     const [fetchError, setFetchError] = useState(false);
     const [showAddUser, setShowAddUser] = useState(false);
     const [showUserDetailsById, setShowUserDetailsById] = useState(null);
+    const [showDeleteUserById, setShowDeleteUserById] = useState(null);
 
     useEffect(() => {
         async function fetchUsers() {
@@ -84,6 +86,23 @@ export default function UserSection() {
         setShowUserDetailsById(userId);
     }
 
+    function userDeleteClickHandler(userId) {
+        setShowDeleteUserById(userId);
+    }
+
+    async function userDeleteHandler(userId) {
+        try {
+            await fetch(`${baseUrl}/users/${userId}`, {
+                method: 'DELETE'
+            });
+        } catch (error) {
+            alert(error.message)
+        }
+
+        setUsers(oldUsers => oldUsers.filter(user => user._id !== userId))
+        setShowDeleteUserById(null);
+    }
+
     return (
         <section className="card users-container">
 
@@ -93,6 +112,7 @@ export default function UserSection() {
                 isLoading={isLoading}
                 fetchError={fetchError}
                 onDetails={userDetailsClickHandler}
+                onDelete={userDeleteClickHandler}
             />
 
             {showAddUser && (
@@ -105,6 +125,13 @@ export default function UserSection() {
                 <UserDetails
                     user={users.find(x => x._id === showUserDetailsById)}
                     onClose={() => setShowUserDetailsById(null)}
+                />
+            )}
+
+            {showDeleteUserById && (
+                <UserDelete
+                    onDelete={() => userDeleteHandler(showDeleteUserById)}
+                    onClose={() => setShowDeleteUserById(null)}
                 />
             )}
 

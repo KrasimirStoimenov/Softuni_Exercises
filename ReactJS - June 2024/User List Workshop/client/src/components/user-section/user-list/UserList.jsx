@@ -8,7 +8,8 @@ export default function UserList({
     users,
     isLoading,
     fetchError,
-    onDetails
+    onDetails,
+    onDelete
 }) {
 
     return (
@@ -75,6 +76,7 @@ export default function UserList({
                             key={user._id}
                             user={user}
                             onDetails={onDetails}
+                            onDelete={onDelete}
                         />
                     )}
                 </tbody>
